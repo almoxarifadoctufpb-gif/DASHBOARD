@@ -1,1544 +1,1953 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VULPS+ · Dashboard de Métricas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>VULPS+ · Cronômetro de Estudos</title>
+    <meta name="description" content="Cronômetro inteligente para estudos. Gerencie seu tempo, disciplinas e metas com o ecossistema VULP+.">
+    <meta property="og:title" content="VULPS+ · Cronômetro de Estudos">
+    <meta property="og:description" content="Sistema gratuito de cronômetro com metas, pausas programadas, relatórios e gestão de disciplinas.">
+    <meta property="og:image" content="https://i.ibb.co/LzCwL9bX/ChatGPT_Image.png">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://vulps-cronometro-2.vercel.app/">
+    <meta property="og:url" content="https://vulps-cronometro-2.vercel.app/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "VULPS+ · Cronômetro de Estudos",
+      "url": "https://vulps-cronometro-2.vercel.app/",
+      "description": "Sistema gratuito de cronômetro com metas, pausas programadas, relatórios e gestão de disciplinas.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* ========== DESIGN SYSTEM VULPS+ (PADRONIZADO) ========== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --accent-primary: #00D9E8;
-            --accent-secondary: #00C2D1;
+            /* Sidebar */
+            --sidebar-gradient: linear-gradient(180deg, #4B0082 0%, #6A0DAD 60%, #7B1FA2 100%);
+            --sidebar-text: #ffffff;
+            --sidebar-hover: rgba(255, 255, 255, 0.12);
+            --sidebar-active: rgba(255, 255, 255, 0.18);
+
+            /* Cores principais */
+            --accent-primary: #11C5D9;
+            --accent-secondary: #0EA5B7;
             --accent-strong: #007F8C;
-            --accent-soft: rgba(0, 217, 232, 0.12);
-            --accent-glow: rgba(0, 217, 232, 0.25);
-            --accent-glass: rgba(0, 217, 232, 0.08);
-            --bg-primary: #0D141C;
-            --bg-secondary: #0F1720;
-            --bg-card: #121C26;
-            --bg-sidebar: #0A1118;
-            --text-primary: #F0F8FF;
-            --text-secondary: #B0E5EB;
-            --text-muted: #7FB8C0;
-            --border-light: #1F2E3A;
-            --border-hover: #00D9E8;
+            --accent-soft: rgba(17, 197, 217, 0.12);
+            --accent-glow: rgba(17, 197, 217, 0.25);
+            --accent-glass: rgba(17, 197, 217, 0.08);
+            --bg-primary: #F4F5F7;
+            --bg-secondary: #EAECF0;
+            --bg-card: #ffffff;
+            --bg-sidebar: #0A0710;
+            --text-primary: #3C1361;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --border-light: #E5E7EB;
+            --border-hover: #11C5D9;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --card-shadow-hover: 0 10px 30px rgba(17, 197, 217, 0.08);
+            --card-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --btn-text: #3C1361;
+            --btn-bg: #ffffff;
+            --btn-bg-hover: #F9FAFB;
+            --btn-border: #D1D5DB;
+            --cortada-color: rgba(239, 68, 68, 0.3);
+            --input-bg: #ffffff;
+            --input-focus-glow: 0 0 0 3px rgba(17, 197, 217, 0.15);
             --success: #22C55E;
             --danger: #EF4444;
             --warning: #F59E0B;
-            --info: #3B82F6;
+            --neon-glow-1: #ff6ec7;
+            --neon-glow-2: #00e5ff;
+
+            /* Footer */
+            --footer-bg: #0f0a14;
+            --footer-text: #b0a8c0;
+            --footer-heading: #ffffff;
+            --footer-link: #11C5D9;
+            --footer-border: rgba(255, 255, 255, 0.08);
             --radius-sm: 14px;
-            --radius-lg: 24px;
-            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --card-shadow-hover: 0 16px 40px rgba(0, 217, 232, 0.12);
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-lg: 28px;
+            --radius-pill: 40px;
+            --sidebar-width: 260px;
+            --transition-speed: 0.25s;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html[data-theme="dark"] {
+            --bg-primary: #15131D;
+            --bg-secondary: #1A1724;
+            --bg-card: #1E1B2A;
+            --text-primary: #EDE9F6;
+            --text-secondary: #B0A8C0;
+            --text-muted: #9CA3AF;
+            --border-light: #2D2638;
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --card-shadow-hover: 0 16px 40px rgba(17, 197, 217, 0.12);
+            --card-shadow-light: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --btn-text: #ffffff;
+            --btn-bg: #2A2335;
+            --btn-bg-hover: #352D42;
+            --btn-border: #3F3650;
+            --cortada-color: rgba(239, 68, 68, 0.35);
+            --input-bg: #2A2335;
+            --input-focus-glow: 0 0 0 3px rgba(17, 197, 217, 0.25);
+            --neon-glow-1: #ff00ff;
+            --neon-glow-2: #00ffff;
+        }
 
         body {
-            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
+            line-height: 1.5;
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* ===== HEADER ===== */
-        .dash-header {
-            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-sidebar) 100%);
-            border-bottom: 2px solid var(--accent-primary);
-            padding: 20px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(12px);
-        }
-
-        .dash-header-inner {
-            max-width: 1400px;
-            margin: 0 auto;
+        #hamburgerBtn {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .dash-brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .dash-brand img {
-            height: 44px;
-            width: auto;
-            border-radius: 12px;
-            filter: drop-shadow(0 4px 8px rgba(0, 217, 232, 0.3));
-        }
-
-        .dash-brand h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 80%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.02em;
-        }
-
-        .dash-brand p {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .dash-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn-dash {
-            padding: 10px 18px;
-            border-radius: 40px;
-            border: 1.5px solid var(--border-light);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            min-height: 44px;
-        }
-
-        .btn-dash:hover {
-            border-color: var(--accent-primary);
-            background: var(--accent-soft);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 217, 232, 0.15);
-        }
-
-        .btn-dash-primary {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-strong));
-            border: none;
-            color: #fff;
-            box-shadow: 0 6px 20px var(--accent-glow);
-        }
-
-        .btn-dash-primary:hover {
-            box-shadow: 0 8px 25px var(--accent-glow), 0 0 0 4px var(--accent-soft);
-        }
-
-        /* ===== MAIN LAYOUT ===== */
-        .dash-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px;
-            display: grid;
-            gap: 24px;
-        }
-
-        /* ===== KPI CARDS ===== */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .kpi-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 22px 20px;
-            border: 1px solid var(--border-light);
-            box-shadow: var(--card-shadow);
-            transition: all var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .kpi-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--card-shadow-hover);
-            border-color: var(--border-hover);
-        }
-
-        .kpi-card:hover::before { opacity: 1; }
-
-        .kpi-card.success::before { background: linear-gradient(90deg, transparent, var(--success), transparent); }
-        .kpi-card.danger::before { background: linear-gradient(90deg, transparent, var(--danger), transparent); }
-        .kpi-card.warning::before { background: linear-gradient(90deg, transparent, var(--warning), transparent); }
-        .kpi-card.info::before { background: linear-gradient(90deg, transparent, var(--info), transparent); }
-
-        .kpi-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .kpi-icon {
+            justify-content: center;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
             width: 44px;
             height: 44px;
             border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
             font-size: 1.2rem;
-            background: var(--accent-soft);
-            color: var(--accent-primary);
-            border: 1px solid rgba(0, 217, 232, 0.2);
-        }
-
-        .kpi-card.success .kpi-icon { background: rgba(34, 197, 94, 0.12); color: var(--success); border-color: rgba(34, 197, 94, 0.2); }
-        .kpi-card.danger .kpi-icon { background: rgba(239, 68, 68, 0.12); color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
-        .kpi-card.warning .kpi-icon { background: rgba(245, 158, 11, 0.12); color: var(--warning); border-color: rgba(245, 158, 11, 0.2); }
-        .kpi-card.info .kpi-icon { background: rgba(59, 130, 246, 0.12); color: var(--info); border-color: rgba(59, 130, 246, 0.2); }
-
-        .kpi-trend {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: var(--accent-soft);
-            color: var(--accent-primary);
-        }
-
-        .kpi-value {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            line-height: 1.2;
-            margin-bottom: 4px;
-        }
-
-        .kpi-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .kpi-sub {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 6px;
-            font-weight: 500;
-        }
-
-        /* ===== SECTIONS ===== */
-        .dash-section {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            border: 1px solid var(--border-light);
-            box-shadow: var(--card-shadow);
-            transition: all var(--transition);
-        }
-
-        .dash-section:hover {
-            border-color: var(--border-hover);
-            box-shadow: var(--card-shadow-hover);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 12px;
-            border-bottom: 1px solid var(--border-light);
-            padding-bottom: 16px;
-        }
-
-        .section-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title i {
-            color: var(--accent-primary);
-            font-size: 1.1rem;
-        }
-
-        .section-filters {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-select {
-            padding: 8px 14px;
-            border-radius: 40px;
-            border: 1.5px solid var(--border-light);
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-size: 0.85rem;
             cursor: pointer;
-            min-height: 40px;
-            outline: none;
-            transition: all 0.2s;
+            box-shadow: var(--card-shadow-light);
+            transition: all 0.25s;
+            -webkit-tap-highlight-color: transparent;
         }
+        #hamburgerBtn:hover { border-color: var(--accent-primary); }
+        #hamburgerBtn:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
 
-        .filter-select:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px var(--accent-soft);
-        }
-
-        /* ===== CHARTS ===== */
-        .chart-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-        }
-
-        .chart-wrapper {
-            position: relative;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-sm);
-            padding: 20px;
-            border: 1px solid var(--border-light);
-        }
-
-        .chart-canvas {
-            width: 100%;
-            height: 280px;
-            display: block;
-        }
-
-        .chart-legend {
-            display: flex;
-            gap: 16px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        /* ===== TABLES ===== */
-        .table-container {
-            overflow-x: auto;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-        }
-
-        .dash-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        .dash-table thead {
-            background: var(--bg-secondary);
-        }
-
-        .dash-table th {
-            padding: 14px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--border-light);
-            white-space: nowrap;
-            cursor: pointer;
-            user-select: none;
-            transition: color 0.2s;
-        }
-
-        .dash-table th:hover {
-            color: var(--accent-primary);
-        }
-
-        .dash-table th i {
-            margin-left: 4px;
-            font-size: 0.7rem;
-            opacity: 0.5;
-        }
-
-        .dash-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border-light);
-            color: var(--text-primary);
-            vertical-align: middle;
-        }
-
-        .dash-table tbody tr {
-            transition: background 0.2s;
-        }
-
-        .dash-table tbody tr:hover {
-            background: var(--accent-soft);
-        }
-
-        .dash-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .badge-table {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .badge-success { background: rgba(34, 197, 94, 0.15); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.3); }
-        .badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-        .badge-info { background: var(--accent-soft); color: var(--accent-primary); border: 1px solid var(--accent-primary); }
-
-        .progress-cell {
-            width: 100px;
-        }
-
-        .progress-bar-mini {
-            width: 100%;
-            height: 6px;
-            background: var(--border-light);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .progress-bar-mini-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 0.5s ease;
-        }
-
-        .progress-bar-mini-fill.high { background: linear-gradient(90deg, var(--success), #4ade80); }
-        .progress-bar-mini-fill.medium { background: linear-gradient(90deg, var(--warning), #fbbf24); }
-        .progress-bar-mini-fill.low { background: linear-gradient(90deg, var(--danger), #f87171); }
-
-        /* ===== HEATMAP ===== */
-        .heatmap-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            max-width: 400px;
-        }
-
-        .heatmap-cell {
-            aspect-ratio: 1;
-            border-radius: 6px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .heatmap-cell:hover {
-            transform: scale(1.15);
-            z-index: 2;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .heatmap-cell.empty { background: var(--bg-secondary); opacity: 0.3; }
-        .heatmap-cell.level-1 { background: rgba(0, 217, 232, 0.2); border-color: rgba(0, 217, 232, 0.3); }
-        .heatmap-cell.level-2 { background: rgba(0, 217, 232, 0.4); border-color: rgba(0, 217, 232, 0.5); }
-        .heatmap-cell.level-3 { background: rgba(0, 217, 232, 0.6); border-color: rgba(0, 217, 232, 0.7); color: var(--bg-primary); }
-        .heatmap-cell.level-4 { background: rgba(0, 217, 232, 0.85); border-color: var(--accent-primary); color: var(--bg-primary); }
-
-        .heatmap-tooltip {
-            position: absolute;
-            bottom: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-card);
-            border: 1px solid var(--accent-primary);
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.2s;
-            z-index: 10;
-            box-shadow: var(--card-shadow);
-        }
-
-        .heatmap-cell:hover .heatmap-tooltip { opacity: 1; }
-
-        .heatmap-labels {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            margin-bottom: 6px;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        /* ===== GOALS ===== */
-        .goal-card {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 20px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-            margin-bottom: 12px;
-            transition: all 0.2s;
-        }
-
-        .goal-card:hover {
-            border-color: var(--accent-primary);
-            background: var(--accent-soft);
-        }
-
-        .goal-ring {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .goal-ring svg {
-            transform: rotate(-90deg);
-        }
-
-        .goal-ring-bg {
-            fill: none;
-            stroke: var(--border-light);
-            stroke-width: 4;
-        }
-
-        .goal-ring-fill {
-            fill: none;
-            stroke: var(--accent-primary);
-            stroke-width: 4;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 1s ease;
-        }
-
-        .goal-ring-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--accent-primary);
-        }
-
-        .goal-info { flex: 1; min-width: 0; }
-        .goal-title { font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
-        .goal-desc { font-size: 0.8rem; color: var(--text-muted); }
-
-        /* ===== EXPORT MODAL ===== */
-        .modal-overlay {
+        /* ========== SIDEBAR PADRONIZADA ========== */
+        #sidebar {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(6px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 16px;
-        }
-
-        .modal-overlay.active { display: flex; }
-
-        .modal-card {
-            background: var(--bg-card);
-            max-width: 600px;
-            width: 100%;
-            border-radius: var(--radius-lg);
-            padding: 28px;
-            border: 2px solid var(--accent-primary);
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 0 8px var(--accent-soft);
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
+            left: 0;
+            top: 0;
+            height: 100vh;
+            height: 100dvh;
+            width: var(--sidebar-width);
+            background: var(--sidebar-gradient);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 28px 18px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 30px rgba(75, 0, 130, 0.2);
+            transform: translateX(-100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #sidebar.open { transform: translateX(0); }
+        #sidebar .sidebar-header {
+            display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            padding-bottom: 16px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
-
-        .modal-title {
-            font-size: 1.3rem;
+        #sidebar .sidebar-header h2 {
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-primary);
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            margin: 0;
+            border: none;
+            padding: 0;
+            background: none;
+            -webkit-text-fill-color: #fff;
+            background-clip: unset;
         }
-
-        .modal-close {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 1px solid var(--border-light);
-            background: transparent;
-            color: var(--text-muted);
+        #closeSidebarBtn {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #ddd;
             cursor: pointer;
             font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #closeSidebarBtn:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+        .sidebar-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: transparent;
+            border: none;
+            color: var(--sidebar-text);
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            width: 100%;
+            min-height: 52px;
+            text-decoration: none;
+            margin-bottom: 2px;
+            position: relative;
+            border-left: 3px solid transparent;
+            text-align: left;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sidebar-btn i {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.25s;
+            min-width: 20px;
+            text-align: center;
+        }
+        .sidebar-btn .sb-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            line-height: 1.25;
+        }
+        .sidebar-btn .sb-title {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: #ffffff;
+        }
+        .sidebar-btn .sb-sub {
+            font-weight: 400;
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.65);
+        }
+        .sidebar-btn:hover {
+            background: var(--sidebar-hover);
+            transform: translateX(4px);
+            color: var(--accent-primary);
+            border-left-color: var(--accent-primary);
+            box-shadow: 0 0 14px rgba(17, 197, 217, 0.3);
+        }
+        .sidebar-btn:hover i { color: var(--accent-primary); }
+        .sidebar-btn:hover .sb-title { color: #ffffff; }
+        .sidebar-btn:hover .sb-sub { color: rgba(255, 255, 255, 0.85); }
+        .sidebar-btn[aria-current="page"] {
+            background: var(--sidebar-active);
+            font-weight: 600;
+            border-left-color: var(--accent-primary);
+        }
+        .sidebar-btn[aria-current="page"] .sb-title { color: #ffffff; }
+        .sidebar-btn[aria-current="page"] .sb-sub { color: rgba(255, 255, 255, 0.8); }
+
+        #sidebarOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 10, 25, 0.7);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s;
+        }
+        #sidebarOverlay.active { opacity: 1; pointer-events: auto; }
+
+        /* ========== APP CONTAINER ========== */
+        .app-container {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 28px 24px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            width: 100%;
+            min-width: 0;
         }
 
-        .modal-close:hover {
-            color: var(--danger);
-            border-color: var(--danger);
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding-bottom: 16px;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-light);
         }
+        .header-brand { display: flex; align-items: center; gap: 14px; }
+        .app-logo {
+            height: 44px;
+            width: auto;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .brand-text h1 {
+            font-weight: 700;
+            font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.2;
+        }
+        .header-actions { display: flex; gap: 8px; align-items: center; }
 
-        .export-preview {
-            background: var(--bg-secondary);
+        .dashboard-inline { display: flex; gap: 12px; flex-wrap: wrap; align-items: stretch; }
+        .kpi-mini {
+            background: var(--bg-card);
             border-radius: var(--radius-sm);
-            padding: 16px;
-            font-family: 'SF Mono', 'Menlo', monospace;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            max-height: 300px;
-            overflow-y: auto;
+            padding: 16px 18px;
             border: 1px solid var(--border-light);
-            white-space: pre-wrap;
-            word-break: break-all;
+            box-shadow: var(--card-shadow-light);
+            text-align: center;
+            flex: 1 1 120px;
+            min-width: 110px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .dash-container { padding: 16px; }
-            .chart-grid { grid-template-columns: 1fr; }
-            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-            .kpi-value { font-size: 1.5rem; }
-            .section-filters { width: 100%; }
-            .section-filters .filter-select { flex: 1; }
-            .heatmap-grid { max-width: 100%; }
+        .kpi-mini:hover { box-shadow: var(--card-shadow-hover); border-color: var(--accent-primary); transform: translateY(-2px); }
+        .kpi-mini i { font-size: 1.3rem; color: var(--accent-primary); opacity: 0.9; }
+        .kpi-mini-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            line-height: 1.2;
         }
+        .kpi-mini-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
 
-        @media (max-width: 480px) {
-            .kpi-grid { grid-template-columns: 1fr; }
-            .dash-header-inner { flex-direction: column; align-items: flex-start; }
+        .card-motivacional {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 20px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
-
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .card-motivacional::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-strong));
+            border-radius: 4px 0 0 4px;
+            opacity: 0.8;
+            transition: opacity 0.3s, width 0.3s;
         }
-
-        .animate-in {
-            animation: fadeInUp 0.5s ease forwards;
+        .card-motivacional:hover { box-shadow: var(--card-shadow-hover); border-color: var(--border-hover); transform: translateY(-2px); }
+        .card-motivacional:hover::before { width: 5px; opacity: 1; }
+        .icone-motivacional {
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+            background: var(--accent-soft);
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.3s, background 0.3s;
+            border: 1px solid rgba(17, 197, 217, 0.2);
         }
+        .card-motivacional:hover .icone-motivacional { transform: scale(1.08); background: var(--accent-glow); }
+        .conteudo-motivacional { flex: 1; min-width: 0; }
+        .frase {
+            font-weight: 600;
+            font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 4px;
+            font-style: italic;
+            letter-spacing: -0.01em;
+        }
+        .autor { font-size: clamp(0.75rem, 1vw, 0.85rem); color: var(--text-muted); font-weight: 500; opacity: 0.85; }
 
-        .animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
-        .animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
-        .animate-delay-3 { animation-delay: 0.3s; opacity: 0; }
-        .animate-delay-4 { animation-delay: 0.4s; opacity: 0; }
-        .animate-delay-5 { animation-delay: 0.5s; opacity: 0; }
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 28px 26px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .card:hover { border-color: var(--border-hover); box-shadow: var(--card-shadow-hover); transform: translateY(-2px); }
+        .card:hover::before { opacity: 0.6; }
 
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-primary); }
-        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+        h2 { font-size: clamp(1.1rem, 1.8vw, 1.35rem); font-weight: 650; letter-spacing: -0.01em; margin-bottom: 18px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-light); padding-bottom: 14px; flex-wrap: wrap; }
+        h2 i { color: var(--accent-primary); font-size: 1.2rem; }
+        h3 { font-weight: 600; font-size: clamp(0.95rem, 1.3vw, 1.1rem); margin-bottom: 14px; color: var(--text-primary); }
+        label { font-weight: 500; font-size: clamp(0.8rem, 1vw, 0.9rem); color: var(--text-secondary); display: block; margin-bottom: 8px; }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+            font-family: inherit;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            min-height: 44px;
+            margin-bottom: 12px;
+        }
+        select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237FB8C0' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; appearance: none; padding-right: 40px; }
+        html[data-theme="dark"] select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237FB8C0' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); }
+        html[data-theme="light"] select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A7B85' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); }
+        textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+        select:focus, input:focus, textarea:focus { outline: none; border-color: var(--accent-primary); box-shadow: var(--input-focus-glow); background: var(--bg-card); }
+
+        .button-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; align-items: center; }
+
+        .btn {
+            background: var(--btn-bg);
+            border: 1.5px solid var(--btn-border);
+            border-radius: var(--radius-pill);
+            padding: 11px 20px;
+            font-weight: 600;
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+            color: var(--btn-text);
+            cursor: pointer;
+            box-shadow: var(--card-shadow-light);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
+            min-height: 44px;
+            min-width: 44px;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .btn::after { content: ''; position: absolute; width: 100%; height: 100%; top: 0; left: -100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); transition: transform 0.5s; }
+        .btn:hover::after { transform: translateX(100%); }
+        .btn:disabled { opacity: 0.55; pointer-events: none; filter: grayscale(0.3); }
+        .btn:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-primary), var(--accent-strong)); border: none; color: #fff; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 6px 20px var(--accent-glow); }
+        .btn-primary:hover:not(:disabled) { background: linear-gradient(135deg, #00F0FF, var(--accent-primary)); transform: translateY(-3px); box-shadow: 0 8px 25px var(--accent-glow), 0 0 0 4px var(--accent-soft); }
+        .btn-outline { background: transparent; border: 1.5px solid var(--border-light); color: var(--btn-text); }
+        .btn-outline:hover:not(:disabled) { background: var(--accent-soft); border-color: var(--accent-primary); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(17, 197, 217, 0.15); }
+        .btn:active:not(:disabled) { transform: scale(0.96); transition: transform 0.1s; }
+        .btn-sm { padding: 8px 15px; font-size: 0.85rem; min-height: 38px; }
+        .btn.active { border-color: var(--accent-primary); background: var(--accent-soft); }
+
+        #theme-toggle {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-pill);
+            padding: 10px 16px;
+            font-size: 1rem;
+            color: var(--btn-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--card-shadow-light);
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
+            font-family: inherit;
+            font-weight: 600;
+        }
+        #theme-toggle:hover { background: var(--btn-bg-hover); border-color: var(--accent-primary); transform: translateY(-1px); }
+        #theme-toggle:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+        .theme-text { display: none; }
+
+        .toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+
+        /* ========== CRONÔMETRO ========== */
+        .cronometro-model-container {
+            position: relative;
+            width: 100%;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+        }
+        .modelo-padrao .cronometro-display {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 800;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.1;
+            margin: 12px 0;
+        }
+        .cronometro-display.pausado { opacity: 0.7; text-decoration: line-through; text-decoration-color: var(--danger); text-decoration-thickness: 3px; }
+        .modo-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 8px;
+        }
+        .modo-tag.padrao { background: var(--accent-soft); color: var(--accent-primary); }
+        .modo-tag.regressivo { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .modo-tag.pomodoro { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .modo-tag.livre { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+        .modo-tag.foco { background: rgba(139, 92, 246, 0.15); color: #8B5CF6; }
+
+        .disciplina-busca-wrapper { position: relative; margin-bottom: 16px; }
+        .disciplina-busca-wrapper .disciplina-busca-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem; pointer-events: none; }
+        .disciplina-busca-input {
+            width: 100%;
+            padding: 12px 14px 12px 40px;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-pill);
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+            font-family: inherit;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            min-height: 44px;
+            margin-bottom: 0;
+        }
+        .disciplina-busca-input:focus { outline: none; border-color: var(--accent-primary); box-shadow: var(--input-focus-glow); background: var(--bg-card); }
+        .disciplinas-scroll-container {
+            max-height: 220px;
+            overflow-y: auto;
+            margin-bottom: 8px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-light) transparent;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+        .disciplinas-scroll-container::-webkit-scrollbar { width: 5px; }
+        .disciplinas-scroll-container::-webkit-scrollbar-track { background: transparent; }
+        .disciplinas-scroll-container::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+        .tabela-disciplinas { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .tabela-disciplinas thead { position: sticky; top: 0; z-index: 2; }
+        .tabela-disciplinas th {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 10px 16px;
+            border-bottom: 2px solid var(--border-light);
+            text-align: left;
+        }
+        .tabela-disciplinas td { padding: 10px 16px; border-bottom: 1px solid var(--border-light); color: var(--text-primary); cursor: pointer; transition: background 0.2s; }
+        .tabela-disciplinas tbody tr:hover td { background: var(--accent-soft); }
+        .tabela-disciplinas tbody tr.selecionada td { background: var(--accent-primary); color: #fff; font-weight: 600; }
+        .tabela-disciplinas tbody tr.selecionada td:first-child::before { content: '✓ '; font-weight: bold; margin-right: 6px; }
+        .disciplina-selecionada-destaque {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 24px;
+            background: var(--accent-primary);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            animation: disciplinaDestaqueIn 0.3s ease;
+        }
+        @keyframes disciplinaDestaqueIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .disciplina-selecionada-destaque .btn-limpar-disciplina {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .disciplina-selecionada-destaque .btn-limpar-disciplina:hover { background: rgba(255, 255, 255, 0.35); }
+
+        .modelo-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 24px;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border-light);
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+        }
+        .modelo-chip:hover { border-color: var(--accent-primary); background: var(--accent-soft); transform: translateY(-2px); box-shadow: 0 4px 12px var(--accent-glow); }
+        .modelo-chip.selecionado { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); box-shadow: 0 6px 18px var(--accent-glow); }
+        .modelo-chip.selecionado:hover { background: var(--accent-secondary); }
+
+        .tabela-relatorio { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .tabela-relatorio th, .tabela-relatorio td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-light); }
+        .tabela-relatorio th { color: var(--accent-primary); font-weight: 600; }
+        .tabela-relatorio tr:hover td { background: var(--accent-soft); }
+
+        .saudacao { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 4px; font-weight: 500; }
+        .meta-progresso { width: 100%; height: 8px; border-radius: 8px; background: var(--border-light); overflow: hidden; margin-top: 8px; }
+        .meta-progresso-fill { height: 100%; border-radius: 8px; background: var(--accent-primary); transition: width 0.5s ease; }
+
+        /* Modelos visuais do cronômetro */
+        .modelo-circular { flex-direction: column; gap: 16px; }
+        .circular-svg-container { position: relative; width: clamp(200px, 40vw, 320px); height: clamp(200px, 40vw, 320px); }
+        .circular-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .circular-bg-circle { fill: none; stroke: var(--border-light); stroke-width: 12; }
+        .circular-progress-circle { fill: none; stroke: var(--accent-primary); stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+        .circular-center-time { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; color: var(--text-primary); }
+        .circular-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+        .modelo-circular.pausado .circular-progress-circle { stroke: var(--danger); opacity: 0.6; }
+
+        .modelo-flipclock { flex-direction: column; gap: 8px; }
+        .flip-container { display: flex; gap: clamp(6px, 2vw, 16px); align-items: center; }
+        .flip-unit { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .flip-digit-wrapper { position: relative; width: clamp(60px, 12vw, 100px); height: clamp(80px, 16vw, 140px); background: #1a1a2e; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid #2a2a45; }
+        html[data-theme="light"] .flip-digit-wrapper { background: #e8ecf1; border-color: #ccd5de; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .flip-digit-top, .flip-digit-bottom { position: absolute; left: 0; right: 0; height: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 900; font-family: 'Courier New', monospace; color: #e0e0e0; background: #1a1a2e; }
+        html[data-theme="light"] .flip-digit-top, html[data-theme="light"] .flip-digit-bottom { color: #1a1a2e; background: #e8ecf1; }
+        .flip-digit-top { top: 0; border-bottom: 0.5px solid #333; border-radius: 12px 12px 0 0; align-items: flex-end; padding-bottom: 2px; }
+        .flip-digit-bottom { bottom: 0; border-top: 0.5px solid #333; border-radius: 0 0 12px 12px; align-items: flex-start; padding-top: 2px; }
+        .flip-divider { position: absolute; left: 4px; right: 4px; top: 50%; height: 2px; background: #000; z-index: 2; }
+        .flip-separator { font-size: clamp(1.5rem, 5vw, 3rem); font-weight: 900; color: var(--accent-primary); align-self: center; }
+        .flip-label { font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em; font-weight: 600; }
+        .modelo-flipclock.pausado .flip-digit-wrapper { opacity: 0.55; border-color: var(--danger); }
+
+        .modelo-minimalista { flex-direction: column; gap: 8px; }
+        .minimalista-display { font-size: clamp(3.5rem, 11vw, 7rem); font-weight: 200; letter-spacing: 0.04em; color: var(--text-primary); font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace; }
+        .minimalista-sub { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+        .modelo-minimalista.pausado .minimalista-display { color: var(--danger); opacity: 0.7; }
+
+        .modelo-pomodoro-visual { flex-direction: column; gap: 10px; }
+        .pomodoro-display { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 700; color: var(--text-primary); }
+        .pomodoro-ciclos { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+        .pomodoro-ciclo-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--border-light); transition: all 0.3s; }
+        .pomodoro-ciclo-dot.completo { background: var(--accent-primary); box-shadow: 0 0 8px var(--accent-glow); }
+        .pomodoro-ciclo-dot.atual { background: var(--warning); animation: pulse-dot 1s infinite; }
+        @keyframes pulse-dot { 0%,100% { box-shadow: 0 0 4px var(--warning); } 50% { box-shadow: 0 0 16px var(--warning); } }
+        .pomodoro-fase { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-primary); }
+
+        .modelo-dashboard { flex-direction: row; flex-wrap: wrap; gap: 16px; justify-content: center; width: 100%; }
+        .dashboard-metrica { flex: 1 1 130px; min-width: 100px; background: var(--bg-secondary); border-radius: 16px; padding: 16px 14px; text-align: center; border: 1px solid var(--border-light); transition: all 0.3s; }
+        .dashboard-metrica:hover { border-color: var(--accent-primary); box-shadow: var(--card-shadow-hover); }
+        .dashboard-metrica-valor { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: var(--accent-primary); }
+        .dashboard-metrica-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+        .dashboard-metrica-destaque { border-color: var(--accent-primary); background: var(--accent-soft); }
+        .dashboard-metrica-destaque .dashboard-metrica-valor { font-size: clamp(2rem, 5vw, 3rem); }
+
+        .modelo-fullfocus { flex-direction: column; gap: 6px; }
+        .fullfocus-display { font-size: clamp(4rem, 14vw, 9rem); font-weight: 900; letter-spacing: -0.04em; color: var(--text-primary); line-height: 0.95; }
+        .fullfocus-sub { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+        .fullfocus-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-primary); z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; cursor: pointer; }
+        .fullfocus-overlay .fullfocus-display { font-size: clamp(5rem, 16vw, 12rem); }
+        .fullfocus-close-hint { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.05em; }
+
+        .modelo-smartwatch { flex-direction: column; gap: 12px; }
+        .smartwatch-face { width: clamp(180px, 35vw, 260px); height: clamp(180px, 35vw, 260px); border-radius: 50%; background: #0a0a0a; border: 4px solid #2a2a35; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 0 0 8px rgba(0,0,0,0.4), 0 0 40px rgba(0,0,0,0.6); position: relative; }
+        html[data-theme="light"] .smartwatch-face { background: #f0f0f5; border-color: #d0d0d8; box-shadow: 0 0 0 8px rgba(0,0,0,0.08), 0 0 30px rgba(0,0,0,0.1); }
+        .smartwatch-time { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: #fff; font-family: 'SF Mono', 'Fira Code', monospace; }
+        html[data-theme="light"] .smartwatch-time { color: #1a1a2e; }
+        .smartwatch-info { font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 0.06em; }
+        .smartwatch-ring { position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 3px solid transparent; border-top-color: var(--accent-primary); animation: smartwatch-spin 4s linear infinite; }
+        @keyframes smartwatch-spin { to { transform: rotate(360deg); } }
+        .modelo-smartwatch.pausado .smartwatch-ring { border-top-color: var(--danger); animation-play-state: paused; }
+
+        .modelo-studyblocks { flex-direction: column; gap: 12px; width: 100%; max-width: 500px; }
+        .studyblock-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; background: var(--bg-secondary); border: 1px solid var(--border-light); transition: all 0.3s; cursor: pointer; }
+        .studyblock-item:hover { border-color: var(--accent-primary); box-shadow: var(--card-shadow-hover); }
+        .studyblock-item.ativo { background: var(--accent-soft); border-color: var(--accent-primary); }
+        .studyblock-numero { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+        .studyblock-numero.feito { background: var(--success); }
+        .studyblock-info { flex: 1; min-width: 0; }
+        .studyblock-titulo { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
+        .studyblock-tempo { font-size: 0.75rem; color: var(--text-muted); }
+        .studyblock-progresso { width: 60px; height: 6px; border-radius: 6px; background: var(--border-light); overflow: hidden; flex-shrink: 0; }
+        .studyblock-progresso-fill { height: 100%; border-radius: 6px; background: var(--accent-primary); transition: width 0.5s; }
+
+        .modelo-neon { flex-direction: column; gap: 10px; }
+        .neon-display { font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--neon-glow-1), 0 0 30px var(--neon-glow-1), 0 0 60px var(--neon-glow-2); animation: neon-flicker 3s infinite alternate; }
+        @keyframes neon-flicker { 0%,100% { text-shadow: 0 0 10px var(--neon-glow-1), 0 0 30px var(--neon-glow-1), 0 0 60px var(--neon-glow-2); } 50% { text-shadow: 0 0 15px var(--neon-glow-1), 0 0 40px var(--neon-glow-2), 0 0 80px var(--neon-glow-1); } }
+        .neon-sub { font-size: 0.8rem; color: var(--neon-glow-2); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; text-shadow: 0 0 8px var(--neon-glow-2); }
+        .modelo-neon.pausado .neon-display { animation: none; text-shadow: 0 0 5px var(--danger), 0 0 15px var(--danger); color: #ffaaaa; }
+
+        /* ========== TOAST ========== */
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+        .toast {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1.5px solid var(--accent-primary);
+            border-radius: var(--radius-pill);
+            padding: 12px 24px;
+            font-weight: 600;
+            box-shadow: var(--card-shadow-hover);
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.2s forwards;
+            pointer-events: auto;
+            font-size: 0.9rem;
+        }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 1000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
+        .modal { background: var(--bg-card); border-radius: var(--radius-lg); padding: 28px; max-width: 440px; width: 90%; box-shadow: var(--card-shadow-hover); border: 1.5px solid var(--border-light); text-align: center; }
+        .modal h3 { margin-bottom: 12px; }
+        .modal .modal-actions { display: flex; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ========== CHATBOT CAMI ========== */
+        #camiFAB {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 9998;
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, #11C5D9 0%, #7B1FA2 100%);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(17, 197, 217, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: camiPulse 3s infinite;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #camiFAB:hover { transform: scale(1.08); box-shadow: 0 0 30px rgba(17, 197, 217, 0.6), 0 8px 20px rgba(0, 0, 0, 0.2); }
+        #camiFAB:active { transform: scale(0.95); }
+        #camiFAB .cami-icon { font-size: 1.6rem; transition: transform 0.3s; }
+        #camiFAB.chat-open .cami-icon { transform: rotate(180deg); }
+        @keyframes camiPulse { 0%,100% { box-shadow: 0 0 20px rgba(17,197,217,0.4), 0 4px 12px rgba(0,0,0,0.15); } 50% { box-shadow: 0 0 32px rgba(17,197,217,0.7), 0 6px 18px rgba(0,0,0,0.25); } }
+        #camiFAB .cami-notification-dot { position: absolute; top: 4px; right: 4px; width: 12px; height: 12px; border-radius: 50%; background: #EF4444; border: 2px solid #fff; display: none; animation: camiDotPulse 2s infinite; }
+        @keyframes camiDotPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.4); } }
+
+        #camiChatWindow {
+            position: fixed; bottom: 96px; left: 24px; z-index: 9997; width: 380px; max-width: calc(100vw - 40px); height: 520px; max-height: calc(100vh - 140px);
+            background: var(--bg-card); border-radius: 20px; box-shadow: 0 16px 40px rgba(0,0,0,0.2); border: 1px solid var(--border-light);
+            display: flex; flex-direction: column; overflow: hidden; transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none; transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+        #camiChatWindow.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+        #camiChatHeader { background: linear-gradient(135deg, #4B0082 0%, #6A0DAD 50%, #11C5D9 100%); padding: 14px 18px; display: flex; align-items: center; gap: 10px; color: #fff; flex-shrink: 0; }
+        #camiChatHeader .cami-avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        #camiChatHeader .cami-header-info { flex: 1; min-width: 0; }
+        #camiChatHeader .cami-header-name { font-weight: 700; font-size: 0.9rem; }
+        #camiChatHeader .cami-header-status { font-size: 0.7rem; opacity: 0.85; }
+        #camiChatMinimize { background: rgba(255,255,255,0.15); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 0.85rem; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+        #camiChatMinimize:hover { background: rgba(255,255,255,0.3); }
+        #camiChatMessages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .cami-message { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 0.85rem; line-height: 1.45; word-break: break-word; animation: camiMsgIn 0.3s ease; }
+        @keyframes camiMsgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .cami-message.bot { background: var(--bg-primary); align-self: flex-start; border-bottom-left-radius: 4px; color: var(--text-primary); border: 1px solid var(--border-light); }
+        .cami-message.user { background: var(--accent-primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .cami-message .cami-typing { display: flex; gap: 4px; padding: 6px 0; }
+        .cami-message .cami-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); animation: camiTypingBounce 1.4s infinite; }
+        .cami-message .cami-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .cami-message .cami-typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes camiTypingBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-8px); } }
+        #camiQuickReplies { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px; border-top: 1px solid var(--border-light); flex-shrink: 0; }
+        .cami-quick-btn { padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-primary); cursor: pointer; font-size: 0.78rem; font-family: inherit; transition: all 0.2s; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+        .cami-quick-btn:hover { background: var(--accent-soft); border-color: var(--accent-primary); color: var(--accent-primary); }
+        #camiChatInputArea { display: flex; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--border-light); flex-shrink: 0; align-items: center; }
+        #camiChatInput { flex: 1; border: 1.5px solid var(--border-light); border-radius: 24px; padding: 10px 16px; font-size: 0.85rem; min-height: 40px; background: var(--input-bg); color: var(--text-primary); font-family: inherit; transition: 0.2s; margin-bottom: 0; }
+        #camiChatInput:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(17,197,217,0.12); }
+        #camiSendBtn { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary); border: none; color: #fff; cursor: pointer; font-size: 1rem; transition: all 0.2s; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+        #camiSendBtn:hover { background: var(--accent-secondary); transform: scale(1.05); }
+        #camiSendBtn:active { transform: scale(0.95); }
+
+        /* ========== FOOTER ========== */
+        .app-footer {
+            background: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 28px 24px 20px;
+            margin-top: 16px;
+            border-top: 1px solid var(--footer-border);
+            font-size: 0.8rem;
+            line-height: 1.7;
+            transition: background-color 0.3s, color 0.3s;
+            width: 100%;
+        }
+        .footer-inner { max-width: 1300px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 24px; }
+        .footer-info { flex: 1 1 300px; min-width: 240px; }
+        .footer-info p { margin: 0 0 8px; }
+        .footer-info strong { color: var(--footer-heading); font-weight: 700; }
+        .footer-links { display: flex; flex-wrap: wrap; gap: 16px; list-style: none; padding: 0; margin: 8px 0 4px; }
+        .footer-links li { margin: 0; }
+        .footer-links a { color: var(--footer-link); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--footer-heading); text-decoration: underline; }
+        .footer-social { display: flex; gap: 14px; align-items: center; flex-shrink: 0; margin-top: 4px; }
+        .footer-social a { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.06); color: var(--footer-text); font-size: 1.1rem; transition: all 0.25s; text-decoration: none; }
+        .footer-social a:hover { background: var(--accent-primary); color: #fff; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(17,197,217,0.3); }
+        .footer-bottom { max-width: 1300px; margin: 20px auto 0; padding-top: 16px; border-top: 1px solid var(--footer-border); text-align: center; font-size: 0.72rem; color: var(--text-muted); display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+        .footer-bottom span { opacity: 0.7; }
+
+        /* ========== MANIFESTO ========== */
+        #vulps-manifesto-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease; }
+        #vulps-manifesto-overlay.vulps-manifesto-open { opacity: 1; visibility: visible; }
+        .vulps-manifesto-card { background: var(--bg-card); width: 100%; max-width: 620px; max-height: 85vh; overflow-y: auto; border-radius: 24px; padding: 32px 24px; border: 2px solid var(--accent-primary); box-shadow: 0 24px 48px rgba(0,0,0,0.6), 0 0 0 8px var(--accent-soft); position: relative; color: var(--text-primary); animation: vulps-manifesto-slideUp 0.4s cubic-bezier(0.22,0.61,0.36,1); }
+        @keyframes vulps-manifesto-slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .vulps-manifesto-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-muted); cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: color 0.2s, border-color 0.2s, background 0.2s; z-index: 5; -webkit-tap-highlight-color: transparent; font-family: inherit; }
+        .vulps-manifesto-close:hover { color: var(--danger); border-color: var(--danger); background: rgba(239,68,68,0.05); }
+        .vulps-manifesto-header { text-align: center; margin-bottom: 24px; }
+        .vulps-manifesto-mascot { width: 80px; height: auto; display: block; margin: 0 auto 16px; filter: drop-shadow(0 4px 12px rgba(17,197,217,0.4)); }
+        .vulps-manifesto-title { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; color: var(--accent-primary); margin-bottom: 4px; }
+        .vulps-manifesto-subtitle { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
+        .vulps-manifesto-body { font-size: 0.95rem; line-height: 1.7; color: var(--text-secondary); max-width: 560px; margin: 0 auto; }
+        .vulps-manifesto-body p { margin-bottom: 16px; }
+        .vulps-manifesto-highlight { color: var(--accent-primary); font-weight: 600; }
+        .vulps-manifesto-footer { text-align: center; margin-top: 24px; font-weight: 600; font-size: 1rem; color: var(--accent-primary); }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (min-width: 48em) {
+            #hamburgerBtn { display: none; }
+            #closeSidebarBtn { display: none; }
+            #sidebar { transform: translateX(0); position: fixed; z-index: 50; }
+            #sidebarOverlay { display: none; }
+            body { padding-left: var(--sidebar-width); }
+            .app-container { padding: 28px 20px 32px; }
+            .theme-text { display: inline; font-size: 0.9rem; }
+            .card { padding: 32px 28px; }
+            .app-footer { padding-left: calc(var(--sidebar-width) + 24px); }
+        }
+        @media (min-width: 64em) { .app-container { max-width: 1400px; padding: 32px 24px; margin: 0 auto; } }
+        @media (min-width: 80em) { .app-container { max-width: 1500px; } }
+        @media (max-width: 47.99em) {
+            .cronometro-display { font-size: clamp(2.5rem, 12vw, 4rem); }
+            .vulps-manifesto-card { padding: 24px 18px; }
+            .vulps-manifesto-title { font-size: 1.5rem; }
+            .modelo-dashboard { flex-direction: column; align-items: stretch; }
+            .flip-digit-wrapper { width: clamp(44px, 10vw, 70px); height: clamp(56px, 13vw, 90px); }
+            .flip-digit-top, .flip-digit-bottom { font-size: clamp(1.5rem, 6vw, 3rem); }
+            .smartwatch-face { width: clamp(150px, 50vw, 200px); height: clamp(150px, 50vw, 200px); }
+            #camiChatWindow { width: calc(100vw - 32px); left: 16px; bottom: 88px; height: 440px; }
+            #camiFAB { bottom: 20px; left: 16px; width: 50px; height: 50px; }
+            .app-footer { padding-left: 16px; padding-right: 16px; }
+            .footer-inner { flex-direction: column; align-items: flex-start; gap: 18px; }
+            .footer-social { margin-top: 8px; }
+        }
+        @media (max-width: 22.5em) {
+            .app-container { padding: 12px 8px; }
+            .card { padding: 16px 12px; }
+            .btn { padding: 10px 14px; font-size: 0.85rem; }
+            .button-group { gap: 6px; }
+        }
     </style>
-<base target="_blank">
 </head>
 <body>
 
-    <header class="dash-header">
-        <div class="dash-header-inner">
-            <div class="dash-brand">
-                <img src="https://i.ibb.co/LzCwL9bX/ChatGPT_Image.png" alt="VULPS+">
-                <div>
-                    <h1>Dashboard VULPS+</h1>
-                    <p>Métricas completas de desempenho</p>
-                </div>
+    <button id="hamburgerBtn" aria-label="Abrir menu" title="Abrir menu"><i class="fas fa-bars"></i></button>
+    <div id="sidebarOverlay"></div>
+
+    <div id="sidebar" role="navigation" aria-label="Menu principal">
+        <div class="sidebar-header">
+            <h2>VULPS+</h2>
+            <button id="closeSidebarBtn" aria-label="Fechar menu" title="Fechar menu"><i class="fas fa-times"></i></button>
+        </div>
+        <a href="https://tela-home.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-users"></i>
+            <span class="sb-info"><span class="sb-title">Comunidade VULP</span><span class="sb-sub">Central do Concurseiro</span></span>
+        </a>
+        <a href="https://vulps-cronogramadeestudos.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-route"></i>
+            <span class="sb-info"><span class="sb-title">Rota da Aprovação</span><span class="sb-sub">Cronograma de Estudos</span></span>
+        </a>
+        <a href="https://vulp-mais-pdf.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-bullseye"></i>
+            <span class="sb-info"><span class="sb-title">QG das Questões</span><span class="sb-sub">Banco de Questões</span></span>
+        </a>
+        <a href="#" class="sidebar-btn" aria-current="page">
+            <i class="fas fa-hourglass-half"></i>
+            <span class="sb-info"><span class="sb-title">Modo Caverna</span><span class="sb-sub">Cronômetro</span></span>
+        </a>
+        <a href="https://vulp-mais-leitor-de-pdf.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-door-open"></i>
+            <span class="sb-info"><span class="sb-title">Sala de Estudos</span><span class="sb-sub">Leitor de PDF</span></span>
+        </a>
+        <a href="https://vulp-mais-leitordeleis.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-balance-scale"></i>
+            <span class="sb-info"><span class="sb-title">Leitor de Leis</span><span class="sb-sub">Memorização de Leis</span></span>
+        </a>
+        <a href="https://vulps-anki-memoriza-o.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-seedling"></i>
+            <span class="sb-info"><span class="sb-title">Decora+</span><span class="sb-sub">Ank de Memória</span></span>
+        </a>
+        <a href="https://vulps-anki-memoriza-o.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-chess-king"></i>
+            <span class="sb-info"><span class="sb-title">Mentor de Guerra</span><span class="sb-sub">Mentoria</span></span>
+        </a>
+        <a href="https://vulps-mais-questoes1.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-robot"></i>
+            <span class="sb-info"><span class="sb-title">IA Concurseira</span><span class="sb-sub">Questões Comentadas</span></span>
+        </a>
+        <a href="https://vulps-mais-pdfs.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-store"></i>
+            <span class="sb-info"><span class="sb-title">VULP Store</span><span class="sb-sub">Material de Estudos</span></span>
+        </a>
+        <a href="https://vulp-blog.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-newspaper"></i>
+            <span class="sb-info"><span class="sb-title">Central VULP</span><span class="sb-sub">Blog</span></span>
+        </a>
+        <a href="https://vulps-controle-leis.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-gavel"></i>
+            <span class="sb-info"><span class="sb-title">Controle das Leis</span><span class="sb-sub">Gestão de Legislação</span></span>
+        </a>
+        <a href="https://vulps-mais.vercel.app/" target="_blank" rel="noopener noreferrer" class="sidebar-btn">
+            <i class="fas fa-heart"></i>
+            <span class="sb-info"><span class="sb-title">Ajude esse Projeto</span><span class="sb-sub">Apoie a VULPS+</span></span>
+        </a>
+    </div>
+
+    <div class="app-container">
+        <div class="app-header">
+            <div class="header-brand">
+                <img src="https://i.ibb.co/LzCwL9bX/ChatGPT_Image.png" alt="Logo do sistema VULPS+" class="app-logo">
+                <div class="brand-text"><h1>VULPS+ | Cronômetro de Estudos</h1></div>
             </div>
-            <div class="dash-actions">
-                <button class="btn-dash" onclick="refreshAll()">
-                    <i class="fas fa-sync-alt"></i> Atualizar
+            <div class="header-actions">
+                <button class="btn btn-outline btn-sm" id="quemSomosBtn" aria-label="Ver manifesto VULPS+">
+                    <img src="https://i.ibb.co/LzCwL9bX/ChatGPT_Image.png" alt="Logo" style="height:22px;width:22px;border-radius:6px;vertical-align:middle;margin-right:4px;"> Quem Somos
                 </button>
-                <button class="btn-dash btn-dash-primary" onclick="openExportModal()">
-                    <i class="fas fa-file-export"></i> Exportar CSV
-                </button>
+                <button id="theme-toggle" aria-label="Alternar tema"><i class="fas" id="theme-icon">☀️</i> <span class="theme-text" id="theme-label">Claro</span></button>
             </div>
         </div>
-    </header>
 
-    <main class="dash-container">
+        <div class="saudacao" id="saudacao"></div>
 
-        <!-- KPI CARDS -->
-        <section class="kpi-grid">
-            <div class="kpi-card success animate-in animate-delay-1">
-                <div class="kpi-header">
-                    <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
-                    <span class="kpi-trend" id="kpiCorrectTrend">+0%</span>
-                </div>
-                <div class="kpi-value" id="kpiCorrect">0</div>
-                <div class="kpi-label">Acertos Totais</div>
-                <div class="kpi-sub" id="kpiCorrectSub">0% de aproveitamento</div>
+        <div id="dashboardInline">
+            <div class="dashboard-inline" id="kpiRow">
+                <div class="kpi-mini"><i class="fas fa-hourglass-half"></i><div class="kpi-mini-value" id="kpiTotalHoras">0h</div><div class="kpi-mini-label">Total Estudado</div></div>
+                <div class="kpi-mini"><i class="fas fa-calendar-check"></i><div class="kpi-mini-value" id="kpiDiasConsecutivos">0</div><div class="kpi-mini-label">Dias Seguidos</div></div>
+                <div class="kpi-mini"><i class="fas fa-bullseye"></i><div class="kpi-mini-value" id="kpiMetasCumpridas">0</div><div class="kpi-mini-label">Metas Batidas</div></div>
+                <div class="kpi-mini"><i class="fas fa-fire"></i><div class="kpi-mini-value" id="kpiDisciplinaTop">--</div><div class="kpi-mini-label">Top Disciplina</div></div>
             </div>
-
-            <div class="kpi-card danger animate-in animate-delay-2">
-                <div class="kpi-header">
-                    <div class="kpi-icon"><i class="fas fa-times-circle"></i></div>
-                    <span class="kpi-trend" id="kpiWrongTrend">0%</span>
-                </div>
-                <div class="kpi-value" id="kpiWrong">0</div>
-                <div class="kpi-label">Erros Totais</div>
-                <div class="kpi-sub" id="kpiWrongSub">0% do total</div>
-            </div>
-
-            <div class="kpi-card info animate-in animate-delay-3">
-                <div class="kpi-header">
-                    <div class="kpi-icon"><i class="fas fa-clock"></i></div>
-                    <span class="kpi-trend"><i class="fas fa-stopwatch"></i></span>
-                </div>
-                <div class="kpi-value" id="kpiTime">00:00</div>
-                <div class="kpi-label">Tempo de Estudo</div>
-                <div class="kpi-sub" id="kpiTimeSub">Média: 0:00/questão</div>
-            </div>
-
-            <div class="kpi-card warning animate-in animate-delay-4">
-                <div class="kpi-header">
-                    <div class="kpi-icon"><i class="fas fa-fire"></i></div>
-                    <span class="kpi-trend" id="kpiStreakTrend">🔥</span>
-                </div>
-                <div class="kpi-value" id="kpiStreak">0</div>
-                <div class="kpi-label">Dias Consecutivos</div>
-                <div class="kpi-sub" id="kpiStreakSub">Maior streak: 0</div>
-            </div>
-
-            <div class="kpi-card success animate-in animate-delay-5">
-                <div class="kpi-header">
-                    <div class="kpi-icon"><i class="fas fa-bullseye"></i></div>
-                    <span class="kpi-trend" id="kpiAccuracyTrend">--</span>
-                </div>
-                <div class="kpi-value" id="kpiAccuracy">0%</div>
-                <div class="kpi-label">Taxa de Acerto</div>
-                <div class="kpi-sub" id="kpiAccuracySub">Meta: 70%</div>
-            </div>
-
-            <div class="kpi-card info animate-in animate-delay-5">
-                <div class="kpi-header">
-                    <div class="kpi-icon"><i class="fas fa-book-open"></i></div>
-                    <span class="kpi-trend">Hoje</span>
-                </div>
-                <div class="kpi-value" id="kpiToday">0</div>
-                <div class="kpi-label">Questões Hoje</div>
-                <div class="kpi-sub" id="kpiTodaySub">Total: 0 questões</div>
-            </div>
-        </section>
-
-        <!-- GRÁFICOS -->
-        <section class="dash-section animate-in animate-delay-2">
-            <div class="section-header">
-                <h2 class="section-title"><i class="fas fa-chart-line"></i> Evolução do Desempenho</h2>
-                <div class="section-filters">
-                    <select class="filter-select" id="chartPeriod" onchange="renderCharts()">
-                        <option value="7">Últimos 7 dias</option>
-                        <option value="14">Últimos 14 dias</option>
-                        <option value="30">Últimos 30 dias</option>
-                        <option value="90">Últimos 3 meses</option>
-                    </select>
-                </div>
-            </div>
-            <div class="chart-grid">
-                <div class="chart-wrapper">
-                    <canvas id="accuracyChart" class="chart-canvas"></canvas>
-                    <div class="chart-legend">
-                        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-primary)"></div>Taxa de Acerto (%)</div>
-                        <div class="legend-item"><div class="legend-dot" style="background: var(--success)"></div>Meta (70%)</div>
-                    </div>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="volumeChart" class="chart-canvas"></canvas>
-                    <div class="chart-legend">
-                        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-primary)"></div>Acertos</div>
-                        <div class="legend-item"><div class="legend-dot" style="background: var(--danger)"></div>Erros</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- HEATMAP + METAS -->
-        <div class="chart-grid">
-            <section class="dash-section animate-in animate-delay-3">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Mapa de Calor Semanal</h2>
-                </div>
-                <div class="heatmap-labels">
-                    <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
-                </div>
-                <div class="heatmap-grid" id="heatmapGrid"></div>
-                <div style="display: flex; gap: 12px; margin-top: 16px; justify-content: center; flex-wrap: wrap;">
-                    <div class="legend-item"><div class="legend-dot" style="background: var(--bg-secondary); border: 1px solid var(--border-light)"></div>Sem dados</div>
-                    <div class="legend-item"><div class="legend-dot" style="background: rgba(0,217,232,0.2)"></div>1-3 questões</div>
-                    <div class="legend-item"><div class="legend-dot" style="background: rgba(0,217,232,0.4)"></div>4-7 questões</div>
-                    <div class="legend-item"><div class="legend-dot" style="background: rgba(0,217,232,0.6)"></div>8-12 questões</div>
-                    <div class="legend-item"><div class="legend-dot" style="background: rgba(0,217,232,0.85)"></div>13+ questões</div>
-                </div>
-            </section>
-
-            <section class="dash-section animate-in animate-delay-3">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fas fa-bullseye"></i> Metas de Estudo</h2>
-                </div>
-                <div id="goalsContainer"></div>
-            </section>
         </div>
 
-        <!-- DESEMPENHO POR DISCIPLINA -->
-        <section class="dash-section animate-in animate-delay-4">
-            <div class="section-header">
-                <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Desempenho por Disciplina</h2>
-                <div class="section-filters">
-                    <select class="filter-select" id="subjectSort" onchange="renderSubjectTable()">
-                        <option value="accuracy">Ordenar: Taxa de Acerto</option>
-                        <option value="total">Ordenar: Total de Questões</option>
-                        <option value="name">Ordenar: Nome</option>
-                    </select>
-                </div>
+        <div class="card" id="secaoMeta">
+            <h2><i class="fas fa-flag-checkered"></i> Meta de Estudo</h2>
+            <div class="button-group" id="metaBotoes">
+                <button class="btn btn-outline meta-btn" data-minutos="60">1 hora</button>
+                <button class="btn btn-outline meta-btn" data-minutos="120">2 horas</button>
+                <button class="btn btn-outline meta-btn" data-minutos="180">3 horas</button>
+                <button class="btn btn-outline meta-btn" data-minutos="240">4 horas</button>
+                <button class="btn btn-outline meta-btn" data-minutos="personalizado">Personalizado</button>
             </div>
-            <div class="table-container">
-                <table class="dash-table" id="subjectTable">
-                    <thead>
-                        <tr>
-                            <th>Disciplina <i class="fas fa-sort"></i></th>
-                            <th>Total <i class="fas fa-sort"></i></th>
-                            <th>Acertos <i class="fas fa-sort"></i></th>
-                            <th>Erros <i class="fas fa-sort"></i></th>
-                            <th>Taxa <i class="fas fa-sort"></i></th>
-                            <th>Tempo Médio <i class="fas fa-sort"></i></th>
-                            <th>Progresso</th>
-                        </tr>
-                    </thead>
-                    <tbody id="subjectTableBody"></tbody>
+            <input type="number" id="metaPersonalizada" placeholder="Minutos personalizados" min="1" max="1440" style="display:none;max-width:250px;">
+            <div id="metaInfo" style="margin-top:12px;display:none;">
+                <span style="font-weight:600;">Meta: <span id="metaValorTexto">--</span></span>
+                <span style="margin-left:12px;color:var(--accent-primary);">Estudado hoje: <strong id="metaEstudadoHoje">0min</strong></span>
+                <span style="margin-left:12px;" id="metaStatus"></span>
+                <div class="meta-progresso"><div class="meta-progresso-fill" id="metaProgressoFill" style="width:0%;"></div></div>
+            </div>
+        </div>
+
+        <div class="card" id="secaoDisciplina">
+            <h2><i class="fas fa-book-open"></i> Disciplina</h2>
+            <div id="disciplinaSelecionadaDestaque" style="display:none;"></div>
+            <div class="disciplina-busca-wrapper">
+                <i class="fas fa-search disciplina-busca-icon"></i>
+                <input type="text" id="disciplinaBuscaInput" class="disciplina-busca-input" placeholder="Buscar disciplina..." autocomplete="off" aria-label="Buscar disciplina">
+            </div>
+            <div class="disciplinas-scroll-container" id="disciplinasChips">
+                <table class="tabela-disciplinas" id="tabelaDisciplinas">
+                    <thead><tr><th>Disciplina</th></tr></thead>
+                    <tbody id="tabelaDisciplinasBody"></tbody>
                 </table>
             </div>
-        </section>
-
-        <!-- HISTÓRICO DETALHADO -->
-        <section class="dash-section animate-in animate-delay-5">
-            <div class="section-header">
-                <h2 class="section-title"><i class="fas fa-history"></i> Histórico Detalhado</h2>
-                <div class="section-filters">
-                    <select class="filter-select" id="historyFilterSubject">
-                        <option value="">Todas as disciplinas</option>
-                    </select>
-                    <select class="filter-select" id="historyFilterResult">
-                        <option value="">Todos os resultados</option>
-                        <option value="correct">Apenas acertos</option>
-                        <option value="wrong">Apenas erros</option>
-                    </select>
-                </div>
+            <div class="disciplina-busca-resultado-info" id="disciplinaBuscaInfo"></div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+                <input type="text" id="novaDisciplinaInput" placeholder="Adicionar disciplina..." style="max-width:300px;margin-bottom:0;">
+                <button class="btn btn-outline btn-sm" id="addDisciplinaBtn"><i class="fas fa-plus"></i></button>
             </div>
-            <div class="table-container">
-                <table class="dash-table" id="historyTable">
-                    <thead>
-                        <tr>
-                            <th>Data/Hora</th>
-                            <th>Disciplina</th>
-                            <th>Resultado</th>
-                            <th>Tempo</th>
-                            <th>ID da Questão</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody"></tbody>
+        </div>
+
+        <div class="card" id="secaoModo">
+            <h2><i class="fas fa-sliders-h"></i> Modo do Cronômetro</h2>
+            <div class="button-group" id="modoBotoes">
+                <button class="btn btn-outline modo-btn active" data-modo="padrao"><i class="fas fa-play"></i> Padrão</button>
+                <button class="btn btn-outline modo-btn" data-modo="regressivo"><i class="fas fa-hourglass-half"></i> Regressivo</button>
+                <button class="btn btn-outline modo-btn" data-modo="pomodoro"><i class="fas fa-clock"></i> Pomodoro</button>
+                <button class="btn btn-outline modo-btn" data-modo="livre"><i class="fas fa-infinity"></i> Livre</button>
+                <button class="btn btn-outline modo-btn" data-modo="foco"><i class="fas fa-eye"></i> Foco</button>
+            </div>
+            <div id="configRegressivo" style="display:none;margin-top:8px;">
+                <input type="number" id="tempoRegressivo" placeholder="Tempo em minutos" min="1" max="480" value="60" style="max-width:200px;">
+            </div>
+            <div id="configPomodoro" style="display:none;margin-top:8px;">
+                <select id="pomodoroPreset" style="max-width:250px;">
+                    <option value="25/5">25/5 (clássico)</option>
+                    <option value="50/10">50/10</option>
+                    <option value="90/15">90/15</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card" id="secaoModelosCronometro">
+            <h2><i class="fas fa-palette"></i> Modelos de Cronômetro</h2>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:14px;">Escolha o estilo visual do seu cronômetro. A experiência de estudo muda, mas suas sessões continuam as mesmas.</p>
+            <div class="button-group" id="modeloChips" style="margin-top:4px;">
+                <button class="modelo-chip selecionado" data-modelo="padrao"><i class="fas fa-clock"></i> Padrão</button>
+                <button class="modelo-chip" data-modelo="circular"><i class="fas fa-circle-notch"></i> Circular</button>
+                <button class="modelo-chip" data-modelo="flipclock"><i class="fas fa-caret-square-down"></i> Flip Clock</button>
+                <button class="modelo-chip" data-modelo="minimalista"><i class="fas fa-minus"></i> Minimalista</button>
+                <button class="modelo-chip" data-modelo="pomodoro-visual"><i class="fas fa-tasks"></i> Pomodoro</button>
+                <button class="modelo-chip" data-modelo="dashboard"><i class="fas fa-th-large"></i> Dashboard</button>
+                <button class="modelo-chip" data-modelo="fullfocus"><i class="fas fa-expand"></i> Full Focus</button>
+                <button class="modelo-chip" data-modelo="smartwatch"><i class="fas fa-stopwatch"></i> Smartwatch</button>
+                <button class="modelo-chip" data-modelo="studyblocks"><i class="fas fa-cubes"></i> Study Blocks</button>
+                <button class="modelo-chip" data-modelo="neon"><i class="fas fa-bolt"></i> Neon</button>
+            </div>
+        </div>
+
+        <div class="card" id="secaoCronometro" style="text-align:center;">
+            <span class="modo-tag padrao" id="modoTag">Padrão</span>
+            <div class="cronometro-model-container modelo-padrao" id="cronometroModelContainer">
+                <div class="cronometro-display" id="cronometroDisplay">00:00:00</div>
+                <div class="circular-svg-container" id="circularContainer" style="display:none;">
+                    <svg class="circular-svg" viewBox="0 0 200 200">
+                        <circle class="circular-bg-circle" cx="100" cy="100" r="88"/>
+                        <circle class="circular-progress-circle" id="circularProgress" cx="100" cy="100" r="88" stroke-dasharray="553" stroke-dashoffset="0"/>
+                    </svg>
+                    <div class="circular-center-time" id="circularTime">00:00:00</div>
+                </div>
+                <div class="circular-label" id="circularLabel" style="display:none;">Estudando</div>
+                <div class="flip-container" id="flipContainer" style="display:none;">
+                    <div class="flip-unit"><div class="flip-digit-wrapper"><div class="flip-digit-top" id="flipHoraTop">00</div><div class="flip-digit-bottom" id="flipHoraBottom">00</div><div class="flip-divider"></div></div><div class="flip-label">Horas</div></div>
+                    <div class="flip-separator">:</div>
+                    <div class="flip-unit"><div class="flip-digit-wrapper"><div class="flip-digit-top" id="flipMinTop">00</div><div class="flip-digit-bottom" id="flipMinBottom">00</div><div class="flip-divider"></div></div><div class="flip-label">Min</div></div>
+                    <div class="flip-separator">:</div>
+                    <div class="flip-unit"><div class="flip-digit-wrapper"><div class="flip-digit-top" id="flipSecTop">00</div><div class="flip-digit-bottom" id="flipSecBottom">00</div><div class="flip-divider"></div></div><div class="flip-label">Seg</div></div>
+                </div>
+                <div class="minimalista-display" id="minimalistaDisplay" style="display:none;">00:00:00</div>
+                <div class="minimalista-sub" id="minimalistaSub" style="display:none;">tempo de foco</div>
+                <div class="pomodoro-display" id="pomodoroVisualDisplay" style="display:none;">00:00:00</div>
+                <div class="pomodoro-ciclos" id="pomodoroCiclos" style="display:none;"></div>
+                <div class="pomodoro-fase" id="pomodoroFase" style="display:none;">Foco</div>
+                <div class="modelo-dashboard" id="dashboardContainer" style="display:none;">
+                    <div class="dashboard-metrica dashboard-metrica-destaque"><div class="dashboard-metrica-valor" id="dashTempo">00:00</div><div class="dashboard-metrica-label">Tempo Ativo</div></div>
+                    <div class="dashboard-metrica"><div class="dashboard-metrica-valor" id="dashPausas">0</div><div class="dashboard-metrica-label">Pausas</div></div>
+                    <div class="dashboard-metrica"><div class="dashboard-metrica-valor" id="dashMeta">0%</div><div class="dashboard-metrica-label">Meta Hoje</div></div>
+                    <div class="dashboard-metrica"><div class="dashboard-metrica-valor" id="dashDisciplina">--</div><div class="dashboard-metrica-label">Disciplina</div></div>
+                </div>
+                <div class="fullfocus-display" id="fullfocusDisplay" style="display:none;">00:00:00</div>
+                <div class="fullfocus-sub" id="fullfocusSub" style="display:none;">foco total</div>
+                <div class="smartwatch-face" id="smartwatchFace" style="display:none;">
+                    <div class="smartwatch-ring"></div>
+                    <div class="smartwatch-time" id="smartwatchTime">00:00:00</div>
+                    <div class="smartwatch-info" id="smartwatchInfo">Estudando</div>
+                </div>
+                <div class="modelo-studyblocks" id="studyblocksContainer" style="display:none;">
+                    <div class="studyblock-item ativo" data-bloco="1"><div class="studyblock-numero">1</div><div class="studyblock-info"><div class="studyblock-titulo">Bloco Atual</div><div class="studyblock-tempo" id="studyblockTempo">00:00:00</div></div><div class="studyblock-progresso"><div class="studyblock-progresso-fill" id="studyblockProgressoFill" style="width:0%;"></div></div></div>
+                    <div class="studyblock-item" data-bloco="2"><div class="studyblock-numero">2</div><div class="studyblock-info"><div class="studyblock-titulo">Próximo Bloco</div><div class="studyblock-tempo">--:--:--</div></div><div class="studyblock-progresso"><div class="studyblock-progresso-fill" style="width:0%;"></div></div></div>
+                    <div class="studyblock-item" data-bloco="3"><div class="studyblock-numero">3</div><div class="studyblock-info"><div class="studyblock-titulo">Bloco 3</div><div class="studyblock-tempo">--:--:--</div></div><div class="studyblock-progresso"><div class="studyblock-progresso-fill" style="width:0%;"></div></div></div>
+                </div>
+                <div class="neon-display" id="neonDisplay" style="display:none;">00:00:00</div>
+                <div class="neon-sub" id="neonSub" style="display:none;">⚡ performance mode</div>
+            </div>
+            <div id="statusSessao" style="color:var(--text-muted);margin-bottom:8px;">Pronto para iniciar</div>
+            <div class="button-group" style="justify-content:center;">
+                <button class="btn btn-primary" id="btnIniciar"><i class="fas fa-play"></i> Iniciar</button>
+                <button class="btn btn-outline" id="btnPausar" disabled><i class="fas fa-pause"></i> Pausar</button>
+                <button class="btn btn-outline" id="btnParar" disabled><i class="fas fa-stop"></i> Finalizar Sessão</button>
+            </div>
+            <div style="margin-top:12px;color:var(--text-muted);font-size:0.8rem;" id="sessaoInfo"></div>
+        </div>
+
+        <div class="card-motivacional" id="cardMotivacional">
+            <div class="icone-motivacional"><i class="fas fa-quote-right"></i></div>
+            <div class="conteudo-motivacional"><p class="frase" id="fraseMotivacional"></p><span class="autor" id="autorMotivacional"></span></div>
+        </div>
+
+        <div class="card" id="secaoRelatorios">
+            <h2><i class="fas fa-chart-bar"></i> Relatórios</h2>
+            <div class="button-group" style="margin-bottom:16px;">
+                <button class="btn btn-outline btn-sm" id="btnExportarCSV"><i class="fas fa-file-csv"></i> CSV</button>
+                <button class="btn btn-outline btn-sm" id="btnExportarPDF"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="btn btn-outline btn-sm" id="btnWhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                <button class="btn btn-outline btn-sm" id="btnImportarHistorico"><i class="fas fa-upload"></i> Importar</button>
+                <input type="file" id="inputImportarHistorico" accept=".json" class="hidden">
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="tabela-relatorio" id="tabelaRelatorio">
+                    <thead><tr><th>Data</th><th>Disciplina</th><th>Modo</th><th>Tempo</th><th>Pausas</th><th>Meta</th></tr></thead>
+                    <tbody id="tabelaRelatorioBody"></tbody>
                 </table>
             </div>
-        </section>
-
-    </main>
-
-    <!-- MODAL EXPORT -->
-    <div class="modal-overlay" id="exportModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 class="modal-title"><i class="fas fa-file-csv"></i> Exportar Dados</h3>
-                <button class="modal-close" onclick="closeExportModal()"><i class="fas fa-times"></i></button>
-            </div>
-            <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 0.9rem;">
-                Selecione os dados que deseja exportar em formato CSV:
-            </p>
-            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-                <button class="btn-dash btn-dash-primary" onclick="exportCSV('all')">
-                    <i class="fas fa-download"></i> Todos os Dados
-                </button>
-                <button class="btn-dash" onclick="exportCSV('subjects')">
-                    <i class="fas fa-graduation-cap"></i> Por Disciplina
-                </button>
-                <button class="btn-dash" onclick="exportCSV('daily')">
-                    <i class="fas fa-calendar"></i> Por Dia
-                </button>
-            </div>
-            <div class="export-preview" id="exportPreview">Selecione uma opção para visualizar...</div>
+            <div id="emptyHistorico" style="text-align:center;padding:24px;color:var(--text-muted);">Nenhuma sessão registrada ainda.</div>
         </div>
     </div>
 
+    <div id="fullfocusOverlay" class="fullfocus-overlay" style="display:none;">
+        <div class="fullfocus-display" id="fullfocusOverlayDisplay">00:00:00</div>
+        <div class="fullfocus-close-hint">Toque para voltar</div>
+        <div class="pomodoro-fase" id="fullfocusOverlayFase" style="margin-top:8px;"></div>
+    </div>
+
+    <!-- CHATBOT CAMI -->
+    <button id="camiFAB" aria-label="Abrir assistente Cami" title="Precisa de ajuda? Fale com Cami!">
+        <span class="cami-icon">🦎</span>
+        <span class="cami-notification-dot" id="camiDot"></span>
+    </button>
+    <div id="camiChatWindow">
+        <div id="camiChatHeader">
+            <div class="cami-avatar">🦎</div>
+            <div class="cami-header-info">
+                <div class="cami-header-name">Cami · Assistente VULPS+</div>
+                <div class="cami-header-status">Online · Pronta para ajudar</div>
+            </div>
+            <button id="camiChatMinimize" aria-label="Minimizar chat">✕</button>
+        </div>
+        <div id="camiChatMessages"></div>
+        <div id="camiQuickReplies">
+            <button class="cami-quick-btn" data-topic="como_usar">Como usar</button>
+            <button class="cami-quick-btn" data-topic="modos">Modos de estudo</button>
+            <button class="cami-quick-btn" data-topic="modelos">Modelos visuais</button>
+            <button class="cami-quick-btn" data-topic="disciplinas">Disciplinas</button>
+            <button class="cami-quick-btn" data-topic="relatorios">Relatórios</button>
+        </div>
+        <div id="camiChatInputArea">
+            <input type="text" id="camiChatInput" placeholder="Digite sua dúvida..." aria-label="Digite sua mensagem">
+            <button id="camiSendBtn" aria-label="Enviar mensagem"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <footer class="app-footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="footer-info">
+                <p><strong>© 2026 VULP+ Tecnologia e Educação</strong></p>
+                <p>VULP+ é uma marca de Tecnologia e Educação Colaborativa, Av. João Maria de Araújo, Residencial Olimpo, João Pessoa - PB, CEP 58067-300.</p>
+                <ul class="footer-links">
+                    <li><a href="#" aria-label="Política de privacidade">Política de privacidade</a></li>
+                    <li><a href="#" aria-label="Termos de uso">Termos de uso</a></li>
+                    <li><a href="#" aria-label="Segurança">Segurança</a></li>
+                    <li><a href="#" aria-label="Mapa do site">Mapa do site</a></li>
+                </ul>
+                <p style="margin-top:6px;"><strong>VULP+ - 2026 © Todos os direitos reservados ®</strong></p>
+            </div>
+            <div class="footer-social">
+                <a href="#" aria-label="Instagram VULP+" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook VULP+" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="WhatsApp VULP+" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>VULP+ · Tecnologia e Educação Colaborativa</span>
+            <span>|</span>
+            <span>Feito com dedicação para concurseiros de todo o Brasil</span>
+        </div>
+    </footer>
+
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
     <script>
-        // ===== CONFIGURAÇÃO E DADOS =====
-        const STORAGE_KEY = 'user_progress_events';
-        const GOALS_KEY = 'vulps_goals';
-
-        // Dados de exemplo para demonstração (serão substituídos por dados reais do localStorage)
-        let events = [];
-        let goals = [
-            { id: 1, title: 'Questões por dia', target: 20, current: 0, unit: 'questões', period: 'daily' },
-            { id: 2, title: 'Taxa de acerto', target: 70, current: 0, unit: '%', period: 'overall' },
-            { id: 3, title: 'Tempo de estudo semanal', target: 300, current: 0, unit: 'min', period: 'weekly' },
-            { id: 4, title: 'Dias consecutivos', target: 30, current: 0, unit: 'dias', period: 'streak' }
-        ];
-
-        function loadData() {
-            try {
-                const stored = localStorage.getItem(STORAGE_KEY);
-                if (stored) {
-                    events = JSON.parse(stored);
-                }
-                const storedGoals = localStorage.getItem(GOALS_KEY);
-                if (storedGoals) {
-                    goals = JSON.parse(storedGoals);
-                }
-            } catch (e) {
-                console.warn('Erro ao carregar dados:', e);
-            }
-        }
-
-        function saveGoals() {
-            localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
-        }
-
-        // ===== UTILITÁRIOS =====
-        function formatTime(seconds) {
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = seconds % 60;
-            if (h > 0) return `${h}h ${m}m`;
-            return `${m}:${s.toString().padStart(2, '0')}`;
-        }
-
-        function formatDate(iso) {
-            const d = new Date(iso);
-            return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-        }
-
-        function getNormalizedDate(iso) {
-            return new Date(iso).toISOString().split('T')[0];
-        }
-
-        function getDayOfWeek(iso) {
-            return new Date(iso).getDay();
-        }
-
-        // ===== CÁLCULO DE MÉTRICAS =====
-        function computeMetrics() {
-            const total = events.length;
-            const correct = events.filter(e => e.correct === true).length;
-            const wrong = total - correct;
-            const totalTime = events.reduce((sum, e) => sum + (e.timeSpent || 0), 0);
-            const avgTime = total > 0 ? Math.round(totalTime / total) : 0;
-            const todayStr = new Date().toISOString().split('T')[0];
-            const todayCount = events.filter(e => e.timestamp.startsWith(todayStr)).length;
-
-            const days = [...new Set(events.map(e => getNormalizedDate(e.timestamp)))].sort();
-            let streak = 0;
-            if (days.length) {
-                const today = new Date();
-                const todayIso = today.toISOString().split('T')[0];
-                let checkDate = new Date(today);
-                if (!days.includes(todayIso)) {
-                    checkDate.setDate(checkDate.getDate() - 1);
-                }
-                while (true) {
-                    const iso = checkDate.toISOString().split('T')[0];
-                    if (days.includes(iso)) {
-                        streak++;
-                        checkDate.setDate(checkDate.getDate() - 1);
-                    } else break;
-                }
-            }
-
-            // Maior streak histórico
-            let maxStreak = 0, currentStreakCount = 0;
-            if (days.length > 0) {
-                for (let i = 0; i < days.length; i++) {
-                    if (i === 0) { currentStreakCount = 1; }
-                    else {
-                        const prev = new Date(days[i-1]);
-                        const curr = new Date(days[i]);
-                        const diff = (curr - prev) / (1000 * 60 * 60 * 24);
-                        if (diff === 1) currentStreakCount++;
-                        else currentStreakCount = 1;
-                    }
-                    maxStreak = Math.max(maxStreak, currentStreakCount);
-                }
-            }
-
-            const correctPercent = total ? ((correct / total) * 100).toFixed(1) : '0.0';
-
-            const bySubject = {};
-            events.forEach(e => {
-                const subj = e.subject || 'Geral';
-                if (!bySubject[subj]) {
-                    bySubject[subj] = { total: 0, correct: 0, time: 0 };
-                }
-                bySubject[subj].total++;
-                if (e.correct) bySubject[subj].correct++;
-                bySubject[subj].time += (e.timeSpent || 0);
-            });
-
-            const byDay = {};
-            events.forEach(e => {
-                const day = getNormalizedDate(e.timestamp);
-                if (!byDay[day]) byDay[day] = { total: 0, correct: 0, time: 0 };
-                byDay[day].total++;
-                if (e.correct) byDay[day].correct++;
-                byDay[day].time += (e.timeSpent || 0);
-            });
-
-            return { total, correct, wrong, totalTime, avgTime, todayCount, streak, maxStreak, correctPercent, bySubject, byDay, days };
-        }
-
-        // ===== RENDERIZAÇÃO =====
-        function renderKPIs() {
-            const m = computeMetrics();
-            document.getElementById('kpiCorrect').textContent = m.correct;
-            document.getElementById('kpiCorrectSub').textContent = `${m.correctPercent}% de aproveitamento`;
-
-            document.getElementById('kpiWrong').textContent = m.wrong;
-            document.getElementById('kpiWrongSub').textContent = m.total > 0 ? `${((m.wrong/m.total)*100).toFixed(1)}% do total` : '0% do total';
-
-            document.getElementById('kpiTime').textContent = formatTime(m.totalTime);
-            document.getElementById('kpiTimeSub').textContent = `Média: ${formatTime(m.avgTime)}/questão`;
-
-            document.getElementById('kpiStreak').textContent = m.streak;
-            document.getElementById('kpiStreakSub').textContent = `Maior streak: ${m.maxStreak}`;
-
-            document.getElementById('kpiAccuracy').textContent = `${m.correctPercent}%`;
-            const acc = parseFloat(m.correctPercent);
-            const accTrend = document.getElementById('kpiAccuracyTrend');
-            if (acc >= 70) { accTrend.textContent = '✓ Meta'; accTrend.style.background = 'rgba(34,197,94,0.15)'; accTrend.style.color = 'var(--success)'; }
-            else if (acc >= 50) { accTrend.textContent = '↑ Subindo'; accTrend.style.background = 'rgba(245,158,11,0.15)'; accTrend.style.color = 'var(--warning)'; }
-            else { accTrend.textContent = '↓ Revisar'; accTrend.style.background = 'rgba(239,68,68,0.15)'; accTrend.style.color = 'var(--danger)'; }
-
-            document.getElementById('kpiToday').textContent = m.todayCount;
-            document.getElementById('kpiTodaySub').textContent = `Total: ${m.total} questões`;
-
-            // Atualizar metas
-            goals[0].current = m.todayCount;
-            goals[1].current = parseFloat(m.correctPercent);
-            goals[2].current = Math.floor(m.totalTime / 60);
-            goals[3].current = m.streak;
-        }
-
-        function renderGoals() {
-            const container = document.getElementById('goalsContainer');
-            container.innerHTML = '';
-            goals.forEach(goal => {
-                const pct = Math.min(100, Math.round((goal.current / goal.target) * 100));
-                const circumference = 2 * Math.PI * 24;
-                const offset = circumference - (pct / 100) * circumference;
-
+        (() => {
+            const escaparHTML = (str) => {
                 const div = document.createElement('div');
-                div.className = 'goal-card';
-                div.innerHTML = `
-                    <div class="goal-ring">
-                        <svg width="56" height="56" viewBox="0 0 56 56">
-                            <circle class="goal-ring-bg" cx="28" cy="28" r="24"/>
-                            <circle class="goal-ring-fill" cx="28" cy="28" r="24" 
-                                stroke-dasharray="${circumference}" 
-                                stroke-dashoffset="${offset}"/>
-                        </svg>
-                        <div class="goal-ring-text">${pct}%</div>
-                    </div>
-                    <div class="goal-info">
-                        <div class="goal-title">${goal.title}</div>
-                        <div class="goal-desc">${goal.current} / ${goal.target} ${goal.unit}</div>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
+                div.textContent = str;
+                return div.innerHTML;
+            };
 
-        function renderHeatmap() {
-            const grid = document.getElementById('heatmapGrid');
-            grid.innerHTML = '';
-            const m = computeMetrics();
+            const STORAGE_KEY = 'vulps_cronometro_data';
 
-            // Últimas 4 semanas (28 dias)
-            const today = new Date();
-            for (let week = 0; week < 4; week++) {
-                for (let dow = 0; dow < 7; dow++) {
-                    const d = new Date(today);
-                    d.setDate(d.getDate() - (week * 7 + (6 - dow)));
-                    const iso = d.toISOString().split('T')[0];
-                    const dayData = m.byDay[iso];
-                    const count = dayData ? dayData.total : 0;
+            const DISCIPLINAS_PADRAO = [
+                'Direito Constitucional', 'Direito Administrativo', 'Direito Civil',
+                'Direito Penal', 'Direito Processual Penal', 'Direito Processual Civil',
+                'Direito do Trabalho', 'Direito Tributário', 'Direito Empresarial',
+                'Direito Ambiental', 'Direito Internacional', 'Direitos Humanos',
+                'Legislação Especial', 'Português', 'Raciocínio Lógico', 'Matemática',
+                'Informática', 'Inglês', 'Espanhol', 'Atualidades', 'História', 'Geografia',
+                'Administração Geral', 'Administração Pública', 'Contabilidade',
+                'Economia', 'Estatística', 'Filosofia', 'Sociologia', 'Ética'
+            ];
 
-                    let level = 'empty';
-                    if (count > 0) level = 'level-1';
-                    if (count >= 4) level = 'level-2';
-                    if (count >= 8) level = 'level-3';
-                    if (count >= 13) level = 'level-4';
+            const FRASES = [
+                { texto: "O sucesso é a soma de pequenos esforços repetidos dia após dia.", autor: "Robert Collier" },
+                { texto: "A educação é a arma mais poderosa que você pode usar para mudar o mundo.", autor: "Nelson Mandela" },
+                { texto: "A disciplina é a ponte entre metas e realizações.", autor: "Jim Rohn" },
+                { texto: "Estudar é como remar contra a maré: se você parar, volta para trás.", autor: "Provérbio Chinês" },
+                { texto: "A persistência é o caminho do êxito.", autor: "Charles Chaplin" },
+                { texto: "Quem estuda e não pratica o que aprendeu, é como o homem que lavra e não semeia.", autor: "Provérbio Árabe" },
+                { texto: "O conhecimento é o único bem que ninguém pode tirar de você.", autor: "B.B. King" },
+                { texto: "A sorte favorece a mente bem preparada.", autor: "Louis Pasteur" },
+                { texto: "Você não pode esperar construir um mundo melhor sem melhorar os indivíduos.", autor: "Marie Curie" },
+                { texto: "A única maneira de fazer um excelente trabalho é amar o que você faz.", autor: "Steve Jobs" },
+                { texto: "Foco. Disciplina. Consistência. A fórmula não muda.", autor: "VULP+" },
+                { texto: "Cada hora de estudo é um tijolo na construção do seu futuro.", autor: "VULP+" },
+                { texto: "O concurso não é sorte, é preparo. E você está se preparando agora.", autor: "VULP+" }
+            ];
 
-                    const cell = document.createElement('div');
-                    cell.className = `heatmap-cell ${level}`;
-                    cell.innerHTML = `
-                        <div class="heatmap-tooltip">
-                            ${d.toLocaleDateString('pt-BR')}: ${count} questão${count !== 1 ? 's' : ''}
-                            ${dayData ? `<br>${dayData.correct} acertos` : ''}
-                        </div>
-                    `;
-                    grid.appendChild(cell);
+            const MODELOS_DISPONIVEIS = [
+                'padrao', 'circular', 'flipclock', 'minimalista', 'pomodoro-visual',
+                'dashboard', 'fullfocus', 'smartwatch', 'studyblocks', 'neon'
+            ];
+
+            let estado = {
+                metaMinutos: 0,
+                disciplinaSelecionada: '',
+                disciplinas: [...DISCIPLINAS_PADRAO],
+                modo: 'padrao',
+                tempoRegressivo: 60,
+                pomodoroPreset: '25/5',
+                cronometroAtivo: false,
+                pausado: false,
+                segundosPassados: 0,
+                segundosEstudadosSessao: 0,
+                pausasRealizadas: 0,
+                timerInterval: null,
+                historico: [],
+                ultimaFraseIndex: -1,
+                modeloCronometro: 'padrao',
+                fullfocusAtivo: false,
+                pomodoroCicloAtual: 0,
+                pomodoroTotalCiclos: 4,
+                disciplinaFiltro: ''
+            };
+
+            function carregarDados() {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    try {
+                        const saved = JSON.parse(raw);
+                        estado.metaMinutos = saved.metaMinutos || 0;
+                        estado.disciplinas = saved.disciplinas || [...DISCIPLINAS_PADRAO];
+                        estado.historico = saved.historico || [];
+                        estado.modo = saved.modo || 'padrao';
+                        estado.tempoRegressivo = saved.tempoRegressivo || 60;
+                        estado.pomodoroPreset = saved.pomodoroPreset || '25/5';
+                        estado.disciplinaSelecionada = saved.disciplinaSelecionada || '';
+                        estado.modeloCronometro = saved.modeloCronometro || 'padrao';
+                        estado.pomodoroCicloAtual = saved.pomodoroCicloAtual || 0;
+                        estado.pomodoroTotalCiclos = saved.pomodoroTotalCiclos || 4;
+                        estado.disciplinaFiltro = saved.disciplinaFiltro || '';
+                    } catch (e) {
+                        estado.disciplinas = [...DISCIPLINAS_PADRAO];
+                    }
                 }
             }
-        }
 
-        function renderSubjectTable() {
-            const m = computeMetrics();
-            const sortBy = document.getElementById('subjectSort').value;
-            const tbody = document.getElementById('subjectTableBody');
-            tbody.innerHTML = '';
-
-            const subjects = Object.entries(m.bySubject).map(([name, data]) => ({
-                name,
-                total: data.total,
-                correct: data.correct,
-                wrong: data.total - data.correct,
-                accuracy: data.total > 0 ? (data.correct / data.total) * 100 : 0,
-                avgTime: data.total > 0 ? Math.round(data.time / data.total) : 0
-            }));
-
-            subjects.sort((a, b) => {
-                if (sortBy === 'accuracy') return b.accuracy - a.accuracy;
-                if (sortBy === 'total') return b.total - a.total;
-                return a.name.localeCompare(b.name);
-            });
-
-            subjects.forEach(s => {
-                const row = document.createElement('tr');
-                const accClass = s.accuracy >= 70 ? 'high' : s.accuracy >= 50 ? 'medium' : 'low';
-                row.innerHTML = `
-                    <td><strong>${s.name}</strong></td>
-                    <td>${s.total}</td>
-                    <td style="color: var(--success); font-weight: 600;">${s.correct}</td>
-                    <td style="color: var(--danger); font-weight: 600;">${s.wrong}</td>
-                    <td><span class="badge-table ${s.accuracy >= 70 ? 'badge-success' : s.accuracy >= 50 ? 'badge-info' : 'badge-danger'}">${s.accuracy.toFixed(1)}%</span></td>
-                    <td>${formatTime(s.avgTime)}</td>
-                    <td class="progress-cell">
-                        <div class="progress-bar-mini">
-                            <div class="progress-bar-mini-fill ${accClass}" style="width: ${s.accuracy}%"></div>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-
-            if (subjects.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);"><i class="fas fa-inbox" style="font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.5;"></i>Nenhum dado disponível. Resolva questões no app para visualizar.</td></tr>';
-            }
-        }
-
-        function renderHistoryTable() {
-            const subjectFilter = document.getElementById('historyFilterSubject').value;
-            const resultFilter = document.getElementById('historyFilterResult').value;
-            const tbody = document.getElementById('historyTableBody');
-            tbody.innerHTML = '';
-
-            let filtered = [...events].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            if (subjectFilter) filtered = filtered.filter(e => (e.subject || 'Geral') === subjectFilter);
-            if (resultFilter === 'correct') filtered = filtered.filter(e => e.correct);
-            if (resultFilter === 'wrong') filtered = filtered.filter(e => !e.correct);
-
-            filtered.slice(0, 100).forEach(e => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${formatDate(e.timestamp)}</td>
-                    <td>${e.subject || 'Geral'}</td>
-                    <td><span class="badge-table ${e.correct ? 'badge-success' : 'badge-danger'}"><i class="fas fa-${e.correct ? 'check' : 'times'}"></i> ${e.correct ? 'Acerto' : 'Erro'}</span></td>
-                    <td>${formatTime(e.timeSpent || 0)}</td>
-                    <td><code style="background: var(--bg-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.8rem;">${(e.questionId || '').substring(0, 8)}...</code></td>
-                `;
-                tbody.appendChild(row);
-            });
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);"><i class="fas fa-inbox" style="font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.5;"></i>Nenhum registro encontrado.</td></tr>';
-            }
-        }
-
-        function populateHistoryFilters() {
-            const m = computeMetrics();
-            const select = document.getElementById('historyFilterSubject');
-            const currentVal = select.value;
-            select.innerHTML = '<option value="">Todas as disciplinas</option>';
-            Object.keys(m.bySubject).sort().forEach(subj => {
-                select.innerHTML += `<option value="${subj}">${subj}</option>`;
-            });
-            select.value = currentVal;
-        }
-
-        // ===== GRÁFICOS CANVAS =====
-        function drawLineChart(canvasId, data, labels, color, fillColor, targetLine) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const dpr = window.devicePixelRatio || 1;
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            ctx.scale(dpr, dpr);
-
-            const W = rect.width;
-            const H = rect.height;
-            const padding = { top: 30, right: 30, bottom: 50, left: 50 };
-            const chartW = W - padding.left - padding.right;
-            const chartH = H - padding.top - padding.bottom;
-
-            ctx.clearRect(0, 0, W, H);
-
-            // Grid
-            ctx.strokeStyle = 'rgba(127, 184, 192, 0.1)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 4; i++) {
-                const y = padding.top + (chartH * i / 4);
-                ctx.beginPath();
-                ctx.moveTo(padding.left, y);
-                ctx.lineTo(W - padding.right, y);
-                ctx.stroke();
+            function salvarDados() {
+                const toSave = {
+                    metaMinutos: estado.metaMinutos,
+                    disciplinas: estado.disciplinas,
+                    historico: estado.historico,
+                    modo: estado.modo,
+                    tempoRegressivo: estado.tempoRegressivo,
+                    pomodoroPreset: estado.pomodoroPreset,
+                    disciplinaSelecionada: estado.disciplinaSelecionada,
+                    modeloCronometro: estado.modeloCronometro,
+                    pomodoroCicloAtual: estado.pomodoroCicloAtual,
+                    pomodoroTotalCiclos: estado.pomodoroTotalCiclos,
+                    disciplinaFiltro: estado.disciplinaFiltro
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
             }
 
-            // Eixos
-            ctx.strokeStyle = 'rgba(127, 184, 192, 0.3)';
-            ctx.beginPath();
-            ctx.moveTo(padding.left, padding.top);
-            ctx.lineTo(padding.left, H - padding.bottom);
-            ctx.lineTo(W - padding.right, H - padding.bottom);
-            ctx.stroke();
-
-            if (data.length === 0) {
-                ctx.fillStyle = 'var(--text-muted)';
-                ctx.font = '14px "Segoe UI", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('Sem dados suficientes', W/2, H/2);
-                return;
+            function showToast(mensagem, tipo = '') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = 'toast ' + tipo;
+                toast.textContent = mensagem;
+                container.appendChild(toast);
+                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 2600);
             }
 
-            const maxVal = Math.max(...data, targetLine || 0, 10);
-            const xStep = chartW / (data.length - 1 || 1);
-
-            // Labels Y
-            ctx.fillStyle = 'var(--text-muted)';
-            ctx.font = '11px "Segoe UI", sans-serif';
-            ctx.textAlign = 'right';
-            for (let i = 0; i <= 4; i++) {
-                const val = Math.round(maxVal - (maxVal * i / 4));
-                const y = padding.top + (chartH * i / 4);
-                ctx.fillText(val, padding.left - 8, y + 4);
-            }
-
-            // Labels X
-            ctx.textAlign = 'center';
-            const step = Math.max(1, Math.floor(labels.length / 7));
-            for (let i = 0; i < labels.length; i += step) {
-                const x = padding.left + i * xStep;
-                ctx.fillText(labels[i], x, H - padding.bottom + 20);
-            }
-
-            // Linha de meta
-            if (targetLine) {
-                const y = padding.top + chartH - (targetLine / maxVal) * chartH;
-                ctx.strokeStyle = 'rgba(34, 197, 94, 0.5)';
-                ctx.setLineDash([6, 4]);
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                ctx.moveTo(padding.left, y);
-                ctx.lineTo(W - padding.right, y);
-                ctx.stroke();
-                ctx.setLineDash([]);
-                ctx.fillStyle = 'var(--success)';
-                ctx.font = '10px "Segoe UI", sans-serif';
-                ctx.fillText('Meta 70%', W - padding.right - 25, y - 5);
-            }
-
-            // Área preenchida
-            ctx.beginPath();
-            ctx.moveTo(padding.left, H - padding.bottom);
-            for (let i = 0; i < data.length; i++) {
-                const x = padding.left + i * xStep;
-                const y = padding.top + chartH - (data[i] / maxVal) * chartH;
-                if (i === 0) ctx.lineTo(x, y);
-                else {
-                    const prevX = padding.left + (i - 1) * xStep;
-                    const prevY = padding.top + chartH - (data[i-1] / maxVal) * chartH;
-                    const cpX = (prevX + x) / 2;
-                    ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
-                }
-            }
-            ctx.lineTo(padding.left + (data.length - 1) * xStep, H - padding.bottom);
-            ctx.closePath();
-            ctx.fillStyle = fillColor;
-            ctx.fill();
-
-            // Linha
-            ctx.beginPath();
-            for (let i = 0; i < data.length; i++) {
-                const x = padding.left + i * xStep;
-                const y = padding.top + chartH - (data[i] / maxVal) * chartH;
-                if (i === 0) ctx.moveTo(x, y);
-                else {
-                    const prevX = padding.left + (i - 1) * xStep;
-                    const prevY = padding.top + chartH - (data[i-1] / maxVal) * chartH;
-                    const cpX = (prevX + x) / 2;
-                    ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
-                }
-            }
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 2.5;
-            ctx.lineCap = 'round';
-            ctx.stroke();
-
-            // Pontos
-            ctx.fillStyle = color;
-            for (let i = 0; i < data.length; i++) {
-                const x = padding.left + i * xStep;
-                const y = padding.top + chartH - (data[i] / maxVal) * chartH;
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.strokeStyle = 'var(--bg-card)';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
-        }
-
-        function drawBarChart(canvasId, correctData, wrongData, labels) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const dpr = window.devicePixelRatio || 1;
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            ctx.scale(dpr, dpr);
-
-            const W = rect.width;
-            const H = rect.height;
-            const padding = { top: 30, right: 30, bottom: 50, left: 50 };
-            const chartW = W - padding.left - padding.right;
-            const chartH = H - padding.top - padding.bottom;
-
-            ctx.clearRect(0, 0, W, H);
-
-            if (correctData.length === 0) {
-                ctx.fillStyle = 'var(--text-muted)';
-                ctx.font = '14px "Segoe UI", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('Sem dados suficientes', W/2, H/2);
-                return;
-            }
-
-            const maxVal = Math.max(...correctData.map((c, i) => c + wrongData[i]), 5);
-            const barGroupWidth = chartW / correctData.length;
-            const barWidth = barGroupWidth * 0.35;
-            const gap = barGroupWidth * 0.1;
-
-            // Grid e eixos
-            ctx.strokeStyle = 'rgba(127, 184, 192, 0.1)';
-            for (let i = 0; i <= 4; i++) {
-                const y = padding.top + (chartH * i / 4);
-                ctx.beginPath();
-                ctx.moveTo(padding.left, y);
-                ctx.lineTo(W - padding.right, y);
-                ctx.stroke();
-            }
-
-            ctx.fillStyle = 'var(--text-muted)';
-            ctx.font = '11px "Segoe UI", sans-serif';
-            ctx.textAlign = 'right';
-            for (let i = 0; i <= 4; i++) {
-                const val = Math.round(maxVal - (maxVal * i / 4));
-                ctx.fillText(val, padding.left - 8, padding.top + (chartH * i / 4) + 4);
-            }
-
-            // Barras
-            for (let i = 0; i < correctData.length; i++) {
-                const x = padding.left + i * barGroupWidth + barGroupWidth / 2;
-
-                // Acertos
-                const h1 = (correctData[i] / maxVal) * chartH;
-                const y1 = H - padding.bottom - h1;
-                ctx.fillStyle = 'var(--accent-primary)';
-                ctx.beginPath();
-                ctx.roundRect(x - barWidth - gap/2, y1, barWidth, h1, [4, 4, 0, 0]);
-                ctx.fill();
-
-                // Erros
-                const h2 = (wrongData[i] / maxVal) * chartH;
-                const y2 = H - padding.bottom - h2;
-                ctx.fillStyle = 'var(--danger)';
-                ctx.beginPath();
-                ctx.roundRect(x + gap/2, y2, barWidth, h2, [4, 4, 0, 0]);
-                ctx.fill();
-
-                // Label
-                ctx.fillStyle = 'var(--text-muted)';
-                ctx.font = '10px "Segoe UI", sans-serif';
-                ctx.textAlign = 'center';
-                if (i % Math.max(1, Math.floor(labels.length / 7)) === 0) {
-                    ctx.fillText(labels[i], x, H - padding.bottom + 18);
-                }
-            }
-        }
-
-        function renderCharts() {
-            const period = parseInt(document.getElementById('chartPeriod').value);
-            const m = computeMetrics();
-            const cutoff = new Date();
-            cutoff.setDate(cutoff.getDate() - period);
-
-            const daily = [];
-            for (let i = period - 1; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const iso = d.toISOString().split('T')[0];
-                const dayData = m.byDay[iso];
-                daily.push({
-                    date: d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-                    accuracy: dayData ? (dayData.correct / dayData.total) * 100 : 0,
-                    correct: dayData ? dayData.correct : 0,
-                    wrong: dayData ? dayData.total - dayData.correct : 0
+            function showModal(titulo, mensagem, botoes) {
+                return new Promise((resolve) => {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'modal-overlay';
+                    overlay.setAttribute('role', 'dialog');
+                    overlay.setAttribute('aria-modal', 'true');
+                    overlay.setAttribute('aria-label', titulo);
+                    overlay.innerHTML = `<div class="modal"><h3>${escaparHTML(titulo)}</h3><p>${escaparHTML(mensagem)}</p><div class="modal-actions"></div></div>`;
+                    const actionsDiv = overlay.querySelector('.modal-actions');
+                    const botoesElements = [];
+                    botoes.forEach(btn => {
+                        const button = document.createElement('button');
+                        button.className = 'btn ' + (btn.classe || 'btn-outline');
+                        button.textContent = btn.texto;
+                        button.addEventListener('click', () => { overlay.remove(); document.removeEventListener('keydown', escHandler); resolve(btn.valor); });
+                        actionsDiv.appendChild(button);
+                        botoesElements.push(button);
+                    });
+                    const escHandler = (e) => {
+                        if (e.key === 'Escape') {
+                            overlay.remove();
+                            document.removeEventListener('keydown', escHandler);
+                            resolve(null);
+                        }
+                    };
+                    document.addEventListener('keydown', escHandler);
+                    overlay.addEventListener('click', (e) => { if (e.target === overlay) { overlay.remove(); document.removeEventListener('keydown', escHandler); resolve(null); } });
+                    document.body.appendChild(overlay);
+                    const primeiroBotao = botoesElements[0] || actionsDiv.querySelector('button');
+                    if (primeiroBotao) primeiroBotao.focus();
                 });
             }
 
-            const labels = daily.map(d => d.date);
-            const accuracyData = daily.map(d => d.accuracy);
-            const correctData = daily.map(d => d.correct);
-            const wrongData = daily.map(d => d.wrong);
-
-            drawLineChart('accuracyChart', accuracyData, labels, '#00D9E8', 'rgba(0, 217, 232, 0.1)', 70);
-            drawBarChart('volumeChart', correctData, wrongData, labels);
-        }
-
-        // ===== EXPORTAÇÃO CSV =====
-        function openExportModal() {
-            document.getElementById('exportModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeExportModal() {
-            document.getElementById('exportModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function exportCSV(type) {
-            const m = computeMetrics();
-            let csv = '';
-            let filename = '';
-
-            if (type === 'all') {
-                csv = 'Data,Disciplina,Acerto,Tempo(s),ID\n';
-                events.forEach(e => {
-                    csv += `${e.timestamp},${e.subject || 'Geral'},${e.correct ? 'Sim' : 'Não'},${e.timeSpent || 0},${e.questionId || ''}\n`;
-                });
-                filename = 'vulps_historico_completo.csv';
-            } else if (type === 'subjects') {
-                csv = 'Disciplina,Total,Acertos,Erros,Taxa_Acerto,Tempo_Medio\n';
-                Object.entries(m.bySubject).forEach(([name, data]) => {
-                    const acc = data.total > 0 ? ((data.correct / data.total) * 100).toFixed(2) : 0;
-                    const avg = data.total > 0 ? Math.round(data.time / data.total) : 0;
-                    csv += `${name},${data.total},${data.correct},${data.total - data.correct},${acc}%,${avg}s\n`;
-                });
-                filename = 'vulps_por_disciplina.csv';
-            } else if (type === 'daily') {
-                csv = 'Data,Total,Acertos,Erros,Taxa_Acerto,Tempo_Total\n';
-                Object.entries(m.byDay).sort().forEach(([date, data]) => {
-                    const acc = data.total > 0 ? ((data.correct / data.total) * 100).toFixed(2) : 0;
-                    csv += `${date},${data.total},${data.correct},${data.total - data.correct},${acc}%,${data.time}s\n`;
-                });
-                filename = 'vulps_por_dia.csv';
+            function formatarTempo(segundosTotais) {
+                const h = Math.floor(segundosTotais / 3600);
+                const m = Math.floor((segundosTotais % 3600) / 60);
+                const s = Math.floor(segundosTotais % 60);
+                return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
             }
 
-            document.getElementById('exportPreview').textContent = csv.substring(0, 2000) + (csv.length > 2000 ? '...' : '');
+            function formatarTempoCompacto(segundosTotais) {
+                const m = Math.floor(segundosTotais / 60);
+                const s = Math.floor(segundosTotais % 60);
+                return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }
 
-            // Download
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
-        }
+            function formatarMinutos(minutos) {
+                if (minutos < 60) return `${minutos}min`;
+                const h = Math.floor(minutos / 60);
+                const m = minutos % 60;
+                return m > 0 ? `${h}h${m}min` : `${h}h`;
+            }
 
-        // ===== INICIALIZAÇÃO =====
-        function refreshAll() {
-            loadData();
-            renderKPIs();
-            renderGoals();
-            renderHeatmap();
-            renderSubjectTable();
-            populateHistoryFilters();
-            renderHistoryTable();
-            renderCharts();
-            saveGoals();
-        }
+            function obterSaudacao() {
+                const hora = new Date().getHours();
+                if (hora >= 5 && hora < 12) return 'Bom dia';
+                if (hora >= 12 && hora < 18) return 'Boa tarde';
+                return 'Boa noite';
+            }
 
-        document.getElementById('historyFilterSubject').addEventListener('change', renderHistoryTable);
-        document.getElementById('historyFilterResult').addEventListener('change', renderHistoryTable);
+            function obterPeriodo() {
+                const hora = new Date().getHours();
+                if (hora >= 5 && hora < 12) return 'manhã';
+                if (hora >= 12 && hora < 18) return 'tarde';
+                return 'noite';
+            }
 
-        window.addEventListener('resize', () => {
-            clearTimeout(window.resizeTimer);
-            window.resizeTimer = setTimeout(renderCharts, 250);
-        });
+            function fraseAleatoria() {
+                let idx;
+                do { idx = Math.floor(Math.random() * FRASES.length); } while (idx === estado.ultimaFraseIndex && FRASES.length > 1);
+                estado.ultimaFraseIndex = idx;
+                return FRASES[idx];
+            }
 
-        // Fechar modal com ESC
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeExportModal();
-        });
+            function atualizarFrase() {
+                const f = fraseAleatoria();
+                document.getElementById('fraseMotivacional').textContent = `"${f.texto}"`;
+                document.getElementById('autorMotivacional').textContent = `— ${f.autor}`;
+            }
 
-        // Iniciar
-        refreshAll();
+            function atualizarSaudacao() {
+                const saudacao = obterSaudacao();
+                const periodo = obterPeriodo();
+                document.getElementById('saudacao').textContent = `${saudacao}! Quanto tempo você quer estudar nesta ${periodo}?`;
+            }
+
+            function obterTempoExibicao() {
+                if (estado.modo === 'regressivo' && estado.cronometroAtivo) {
+                    return Math.max(0, estado.tempoRegressivo * 60 - estado.segundosEstudadosSessao);
+                }
+                return estado.segundosPassados;
+            }
+
+            function atualizarTodosDisplays() {
+                const tempoExibir = obterTempoExibicao();
+                const tempoStr = formatarTempo(tempoExibir);
+                const tempoCompacto = formatarTempoCompacto(tempoExibir);
+                const h = String(Math.floor(tempoExibir / 3600)).padStart(2, '0');
+                const m = String(Math.floor((tempoExibir % 3600) / 60)).padStart(2, '0');
+                const s = String(Math.floor(tempoExibir % 60)).padStart(2, '0');
+
+                const displayPadrao = document.getElementById('cronometroDisplay');
+                if (displayPadrao) { displayPadrao.textContent = tempoStr; if (estado.pausado) displayPadrao.classList.add('pausado'); else displayPadrao.classList.remove('pausado'); }
+
+                const circularTime = document.getElementById('circularTime');
+                const circularProgress = document.getElementById('circularProgress');
+                if (circularTime) circularTime.textContent = tempoStr;
+                if (circularProgress) {
+                    const circunferencia = 2 * Math.PI * 88;
+                    let progresso = 0;
+                    if (estado.modo === 'regressivo' && estado.cronometroAtivo) {
+                        const total = estado.tempoRegressivo * 60;
+                        progresso = total > 0 ? (tempoExibir / total) : 1;
+                    } else if (estado.metaMinutos > 0 && estado.cronometroAtivo) {
+                        const metaSeg = estado.metaMinutos * 60;
+                        progresso = metaSeg > 0 ? Math.min(1, estado.segundosEstudadosSessao / metaSeg) : 0;
+                    } else if (estado.cronometroAtivo) { progresso = 0.5; }
+                    const offset = circunferencia * (1 - progresso);
+                    circularProgress.setAttribute('stroke-dasharray', circunferencia);
+                    circularProgress.setAttribute('stroke-dashoffset', offset);
+                }
+
+                document.getElementById('flipHoraTop').textContent = h;
+                document.getElementById('flipHoraBottom').textContent = h;
+                document.getElementById('flipMinTop').textContent = m;
+                document.getElementById('flipMinBottom').textContent = m;
+                document.getElementById('flipSecTop').textContent = s;
+                document.getElementById('flipSecBottom').textContent = s;
+
+                const minDisplay = document.getElementById('minimalistaDisplay'); if (minDisplay) minDisplay.textContent = tempoStr;
+                const pomDisplay = document.getElementById('pomodoroVisualDisplay'); if (pomDisplay) pomDisplay.textContent = tempoStr;
+
+                document.getElementById('dashTempo').textContent = tempoCompacto;
+                document.getElementById('dashPausas').textContent = estado.pausasRealizadas;
+                const estudadoHoje = calcularEstudadoHoje();
+                const percentMeta = estado.metaMinutos > 0 ? Math.min(100, Math.round((estudadoHoje / estado.metaMinutos) * 100)) : 0;
+                document.getElementById('dashMeta').textContent = percentMeta + '%';
+                document.getElementById('dashDisciplina').textContent = estado.disciplinaSelecionada ? estado.disciplinaSelecionada.substring(0, 12) : '--';
+
+                const ffDisplay = document.getElementById('fullfocusDisplay');
+                const ffOverlayDisplay = document.getElementById('fullfocusOverlayDisplay');
+                if (ffDisplay) ffDisplay.textContent = tempoStr;
+                if (ffOverlayDisplay) ffOverlayDisplay.textContent = tempoStr;
+
+                const swTime = document.getElementById('smartwatchTime'); if (swTime) swTime.textContent = tempoStr;
+                const sbTempo = document.getElementById('studyblockTempo'); if (sbTempo) sbTempo.textContent = tempoStr;
+                const sbFill = document.getElementById('studyblockProgressoFill');
+                if (sbFill && estado.metaMinutos > 0) {
+                    const pct = Math.min(100, Math.round((estado.segundosEstudadosSessao / (estado.metaMinutos * 60)) * 100));
+                    sbFill.style.width = pct + '%';
+                }
+                const neonDisplay = document.getElementById('neonDisplay'); if (neonDisplay) neonDisplay.textContent = tempoStr;
+            }
+
+            function atualizarModeloContainer() {
+                const container = document.getElementById('cronometroModelContainer');
+                const modelo = estado.modeloCronometro;
+                container.className = 'cronometro-model-container modelo-' + modelo;
+                if (estado.pausado) container.classList.add('pausado');
+                const elementos = {
+                    'cronometroDisplay': modelo === 'padrao', 'circularContainer': modelo === 'circular', 'circularLabel': modelo === 'circular',
+                    'flipContainer': modelo === 'flipclock', 'minimalistaDisplay': modelo === 'minimalista', 'minimalistaSub': modelo === 'minimalista',
+                    'pomodoroVisualDisplay': modelo === 'pomodoro-visual', 'pomodoroCiclos': modelo === 'pomodoro-visual', 'pomodoroFase': modelo === 'pomodoro-visual',
+                    'dashboardContainer': modelo === 'dashboard', 'fullfocusDisplay': modelo === 'fullfocus', 'fullfocusSub': modelo === 'fullfocus',
+                    'smartwatchFace': modelo === 'smartwatch', 'studyblocksContainer': modelo === 'studyblocks', 'neonDisplay': modelo === 'neon', 'neonSub': modelo === 'neon'
+                };
+                for (const [id, visivel] of Object.entries(elementos)) {
+                    const el = document.getElementById(id); if (el) el.style.display = visivel ? '' : 'none';
+                }
+                document.querySelectorAll('.modelo-chip').forEach(chip => chip.classList.toggle('selecionado', chip.dataset.modelo === modelo));
+                const ffOverlay = document.getElementById('fullfocusOverlay');
+                if (modelo === 'fullfocus' && estado.cronometroAtivo && estado.fullfocusAtivo) { ffOverlay.style.display = 'flex'; }
+                else if (modelo !== 'fullfocus') { ffOverlay.style.display = 'none'; estado.fullfocusAtivo = false; }
+            }
+
+            function atualizarDisplayCronometro() {
+                atualizarTodosDisplays();
+                if (estado.modo === 'regressivo' && estado.cronometroAtivo) {
+                    const restante = estado.tempoRegressivo * 60 - estado.segundosEstudadosSessao;
+                    if (restante <= 0 && estado.cronometroAtivo) { finalizarSessaoAutomatica(); }
+                }
+            }
+
+            function atualizarModoTag() {
+                const tag = document.getElementById('modoTag');
+                tag.textContent = estado.modo.charAt(0).toUpperCase() + estado.modo.slice(1);
+                tag.className = 'modo-tag ' + estado.modo;
+            }
+
+            function atualizarStatusSessao(texto) {
+                document.getElementById('statusSessao').textContent = texto;
+                document.getElementById('smartwatchInfo').textContent = texto;
+                document.getElementById('circularLabel').textContent = texto;
+                document.getElementById('minimalistaSub').textContent = texto.toLowerCase();
+                document.getElementById('fullfocusSub').textContent = texto.toLowerCase();
+                document.getElementById('neonSub').textContent = '⚡ ' + texto.toLowerCase();
+            }
+
+            function atualizarBotoesCronometro(ativo, pausado) {
+                document.getElementById('btnIniciar').disabled = ativo && !pausado;
+                document.getElementById('btnPausar').disabled = !ativo;
+                document.getElementById('btnParar').disabled = !ativo;
+                document.getElementById('btnPausar').innerHTML = pausado ? '<i class="fas fa-play"></i> Retomar' : '<i class="fas fa-pause"></i> Pausar';
+            }
+
+            function atualizarMetaInfo() {
+                const metaInfo = document.getElementById('metaInfo');
+                if (estado.metaMinutos > 0) {
+                    metaInfo.style.display = 'block';
+                    document.getElementById('metaValorTexto').textContent = formatarMinutos(estado.metaMinutos);
+                    const estudadoHoje = calcularEstudadoHoje();
+                    document.getElementById('metaEstudadoHoje').textContent = formatarMinutos(estudadoHoje);
+                    const percent = Math.min(100, Math.round((estudadoHoje / estado.metaMinutos) * 100));
+                    document.getElementById('metaProgressoFill').style.width = percent + '%';
+                    const statusEl = document.getElementById('metaStatus');
+                    if (percent >= 100) { statusEl.textContent = '✅ Meta cumprida!'; statusEl.style.color = 'var(--success)'; }
+                    else if (percent >= 75) { statusEl.textContent = '🔥 Quase lá!'; statusEl.style.color = 'var(--warning)'; }
+                    else { statusEl.textContent = '📚 Continue!'; statusEl.style.color = 'var(--text-muted)'; }
+                } else { metaInfo.style.display = 'none'; }
+            }
+
+            function calcularEstudadoHoje() {
+                const hoje = new Date().toISOString().split('T')[0];
+                return estado.historico.filter(s => s.data === hoje).reduce((acc, s) => acc + Math.floor(s.segundos / 60), 0);
+            }
+
+            function atualizarKPIs() {
+                const totalSegundos = estado.historico.reduce((acc, s) => acc + s.segundos, 0);
+                document.getElementById('kpiTotalHoras').textContent = (totalSegundos / 3600).toFixed(1) + 'h';
+                const diasUnicos = [...new Set(estado.historico.map(s => s.data))].sort().reverse();
+                let diasConsecutivos = 0;
+                const hoje = new Date().toISOString().split('T')[0];
+                let dataRef = new Date(hoje + 'T00:00:00');
+                for (let i = 0; i < 365; i++) {
+                    if (diasUnicos.includes(dataRef.toISOString().split('T')[0])) { diasConsecutivos++; dataRef.setDate(dataRef.getDate() - 1); }
+                    else break;
+                }
+                document.getElementById('kpiDiasConsecutivos').textContent = diasConsecutivos;
+                const metasCumpridas = diasUnicos.filter(data => {
+                    const minutosDia = estado.historico.filter(s => s.data === data).reduce((acc, s) => acc + Math.floor(s.segundos / 60), 0);
+                    return estado.metaMinutos > 0 && minutosDia >= estado.metaMinutos;
+                }).length;
+                document.getElementById('kpiMetasCumpridas').textContent = metasCumpridas;
+                const mapaDisciplinas = {};
+                estado.historico.forEach(s => { mapaDisciplinas[s.disciplina] = (mapaDisciplinas[s.disciplina] || 0) + s.segundos; });
+                let topDisciplina = '--', maxSeg = 0;
+                for (const [disc, seg] of Object.entries(mapaDisciplinas)) { if (seg > maxSeg) { maxSeg = seg; topDisciplina = disc; } }
+                if (topDisciplina.length > 15) topDisciplina = topDisciplina.substring(0, 13) + '...';
+                document.getElementById('kpiDisciplinaTop').textContent = topDisciplina;
+                document.getElementById('dashDisciplina').textContent = estado.disciplinaSelecionada ? estado.disciplinaSelecionada.substring(0, 12) : '--';
+                const percentMeta = estado.metaMinutos > 0 ? Math.min(100, Math.round((calcularEstudadoHoje() / estado.metaMinutos) * 100)) : 0;
+                document.getElementById('dashMeta').textContent = percentMeta + '%';
+            }
+
+            function atualizarDestaqueDisciplina() {
+                const destaque = document.getElementById('disciplinaSelecionadaDestaque');
+                if (estado.disciplinaSelecionada) {
+                    destaque.style.display = 'flex';
+                    destaque.innerHTML = `<i class="fas fa-check-circle"></i><span>${escaparHTML(estado.disciplinaSelecionada)}</span><button class="btn-limpar-disciplina" aria-label="Limpar disciplina"><i class="fas fa-times"></i></button>`;
+                    destaque.querySelector('.btn-limpar-disciplina').addEventListener('click', () => {
+                        estado.disciplinaSelecionada = '';
+                        salvarDados();
+                        atualizarDestaqueDisciplina();
+                        renderizarDisciplinas();
+                        atualizarKPIs();
+                        document.getElementById('disciplinaBuscaInput').value = '';
+                        estado.disciplinaFiltro = '';
+                        salvarDados();
+                    });
+                } else { destaque.style.display = 'none'; destaque.innerHTML = ''; }
+            }
+
+            function renderizarDisciplinas() {
+                const tbody = document.getElementById('tabelaDisciplinasBody');
+                const filtro = estado.disciplinaFiltro.toLowerCase().trim();
+                const infoEl = document.getElementById('disciplinaBuscaInfo');
+                tbody.innerHTML = '';
+                const disciplinasFiltradas = filtro ? estado.disciplinas.filter(d => d.toLowerCase().includes(filtro)) : estado.disciplinas;
+                if (disciplinasFiltradas.length === 0 && filtro) infoEl.textContent = 'Nenhuma disciplina encontrada';
+                else if (filtro) infoEl.textContent = disciplinasFiltradas.length + ' disciplina(s) encontrada(s)';
+                else infoEl.textContent = estado.disciplinas.length + ' disciplinas disponíveis';
+                disciplinasFiltradas.forEach(d => {
+                    const tr = document.createElement('tr');
+                    if (estado.disciplinaSelecionada === d) tr.classList.add('selecionada');
+                    tr.innerHTML = `<td>${escaparHTML(d)}</td>`;
+                    tr.addEventListener('click', () => { estado.disciplinaSelecionada = d; salvarDados(); atualizarDestaqueDisciplina(); renderizarDisciplinas(); atualizarKPIs(); });
+                    tbody.appendChild(tr);
+                });
+                atualizarDestaqueDisciplina();
+            }
+
+            function renderizarPomodoroCiclos() {
+                const container = document.getElementById('pomodoroCiclos'); if (!container) return;
+                container.innerHTML = '';
+                for (let i = 0; i < estado.pomodoroTotalCiclos; i++) {
+                    const dot = document.createElement('span');
+                    dot.className = 'pomodoro-ciclo-dot';
+                    if (i < estado.pomodoroCicloAtual) dot.classList.add('completo');
+                    if (i === estado.pomodoroCicloAtual && estado.cronometroAtivo) dot.classList.add('atual');
+                    container.appendChild(dot);
+                }
+                const fase = document.getElementById('pomodoroFase'); if (fase) fase.textContent = estado.cronometroAtivo ? (estado.pausado ? 'Pausa' : 'Foco') : 'Pronto';
+            }
+
+            function iniciarCronometro() {
+                if (!estado.disciplinaSelecionada) { showToast('Selecione uma disciplina para iniciar.', 'error'); return; }
+                if (estado.modo === 'regressivo' && estado.tempoRegressivo <= 0) { showToast('Defina um tempo para o modo regressivo.', 'error'); return; }
+                if (estado.cronometroAtivo && !estado.pausado) return;
+                if (estado.pausado) { estado.pausado = false; atualizarBotoesCronometro(true, false); atualizarStatusSessao('Estudando...'); atualizarModeloContainer(); iniciarIntervalo(); return; }
+                estado.cronometroAtivo = true; estado.pausado = false; estado.segundosEstudadosSessao = 0; estado.pausasRealizadas = 0; estado.segundosPassados = 0; estado.pomodoroCicloAtual = 0;
+                if (estado.modeloCronometro === 'fullfocus') { estado.fullfocusAtivo = true; document.getElementById('fullfocusOverlay').style.display = 'flex'; }
+                atualizarBotoesCronometro(true, false); atualizarStatusSessao('Estudando...'); atualizarModeloContainer(); atualizarDisplayCronometro(); renderizarPomodoroCiclos();
+                document.getElementById('sessaoInfo').textContent = `Disciplina: ${estado.disciplinaSelecionada} | Modo: ${estado.modo} | Modelo: ${estado.modeloCronometro}`;
+                iniciarIntervalo();
+            }
+
+            function iniciarIntervalo() {
+                if (estado.timerInterval) clearInterval(estado.timerInterval);
+                estado.timerInterval = setInterval(() => {
+                    if (!estado.pausado && estado.cronometroAtivo) {
+                        estado.segundosPassados++; estado.segundosEstudadosSessao++; atualizarDisplayCronometro();
+                        if (estado.modo === 'regressivo' && (estado.tempoRegressivo * 60 - estado.segundosEstudadosSessao) <= 0) finalizarSessaoAutomatica();
+                    }
+                }, 1000);
+            }
+
+            function pausarCronometro() {
+                if (!estado.cronometroAtivo) return;
+                estado.pausado = !estado.pausado;
+                if (estado.pausado) { estado.pausasRealizadas++; atualizarBotoesCronometro(true, true); atualizarStatusSessao('Pausado'); }
+                else { atualizarBotoesCronometro(true, false); atualizarStatusSessao('Estudando...'); }
+                atualizarModeloContainer(); atualizarDisplayCronometro();
+            }
+
+            async function pararCronometro() {
+                if (!estado.cronometroAtivo) return;
+                const resultado = await showModal('Finalizar sessão', `Deseja finalizar esta sessão de estudo?\nTempo estudado: ${formatarTempo(estado.segundosEstudadosSessao)}\nDisciplina: ${estado.disciplinaSelecionada}`, [
+                    { texto: 'Cancelar', valor: false, classe: 'btn-outline' },
+                    { texto: 'Finalizar', valor: true, classe: 'btn-primary' }
+                ]);
+                if (resultado === true) finalizarSessaoManual();
+            }
+
+            function finalizarSessaoManual() { finalizarSessao(); }
+            function finalizarSessaoAutomatica() { finalizarSessao(); showToast('⏰ Tempo regressivo concluído!', 'success'); }
+
+            function finalizarSessao() {
+                if (estado.timerInterval) clearInterval(estado.timerInterval);
+                estado.timerInterval = null; estado.cronometroAtivo = false; estado.pausado = false; estado.fullfocusAtivo = false;
+                document.getElementById('fullfocusOverlay').style.display = 'none';
+                const hoje = new Date().toISOString().split('T')[0];
+                const sessao = {
+                    id: Date.now().toString(), data: hoje, disciplina: estado.disciplinaSelecionada, modo: estado.modo,
+                    segundos: estado.segundosEstudadosSessao, pausas: estado.pausasRealizadas,
+                    metaCumprida: estado.metaMinutos > 0 && calcularEstudadoHoje() + Math.floor(estado.segundosEstudadosSessao / 60) >= estado.metaMinutos,
+                    modelo: estado.modeloCronometro
+                };
+                if (sessao.segundos > 5) estado.historico.unshift(sessao);
+                estado.pomodoroCicloAtual = Math.min(estado.pomodoroTotalCiclos, estado.pomodoroCicloAtual + (sessao.segundos > 5 ? 1 : 0));
+                salvarDados();
+                atualizarBotoesCronometro(false, false); atualizarStatusSessao('Sessão finalizada'); atualizarModeloContainer();
+                document.getElementById('sessaoInfo').textContent = '';
+                document.getElementById('cronometroDisplay').textContent = '00:00:00'; document.getElementById('cronometroDisplay').classList.remove('pausado');
+                document.getElementById('circularTime').textContent = '00:00:00'; document.getElementById('minimalistaDisplay').textContent = '00:00:00';
+                document.getElementById('pomodoroVisualDisplay').textContent = '00:00:00'; document.getElementById('fullfocusDisplay').textContent = '00:00:00';
+                document.getElementById('fullfocusOverlayDisplay').textContent = '00:00:00'; document.getElementById('smartwatchTime').textContent = '00:00:00';
+                document.getElementById('studyblockTempo').textContent = '00:00:00'; document.getElementById('neonDisplay').textContent = '00:00:00';
+                document.getElementById('dashTempo').textContent = '00:00'; document.getElementById('dashPausas').textContent = '0';
+                const circProgress = document.getElementById('circularProgress'); if (circProgress) circProgress.setAttribute('stroke-dashoffset', '0');
+                atualizarMetaInfo(); atualizarKPIs(); renderizarHistorico(); renderizarPomodoroCiclos(); atualizarFrase();
+                if (sessao.segundos > 5) showToast(`Sessão salva: ${formatarTempo(sessao.segundos)} em ${sessao.disciplina}`, 'success');
+            }
+
+            function selecionarModelo(modelo) {
+                if (!MODELOS_DISPONIVEIS.includes(modelo)) return;
+                estado.modeloCronometro = modelo;
+                if (modelo === 'fullfocus' && estado.cronometroAtivo && !estado.pausado) { estado.fullfocusAtivo = true; document.getElementById('fullfocusOverlay').style.display = 'flex'; }
+                else if (modelo !== 'fullfocus') { estado.fullfocusAtivo = false; document.getElementById('fullfocusOverlay').style.display = 'none'; }
+                salvarDados(); atualizarModeloContainer(); atualizarDisplayCronometro();
+                if (modelo === 'pomodoro-visual') renderizarPomodoroCiclos();
+                showToast(`Modelo "${modelo}" selecionado!`, 'success');
+            }
+
+            function renderizarHistorico() {
+                const tbody = document.getElementById('tabelaRelatorioBody');
+                const empty = document.getElementById('emptyHistorico');
+                tbody.innerHTML = '';
+                if (estado.historico.length === 0) { empty.style.display = 'block'; return; }
+                empty.style.display = 'none';
+                estado.historico.slice(0, 50).forEach(s => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${new Date(s.data + 'T00:00:00').toLocaleDateString('pt-BR')}</td><td>${escaparHTML(s.disciplina)}</td><td>${s.modo}${s.modelo ? ' · ' + s.modelo : ''}</td><td>${formatarTempo(s.segundos)}</td><td>${s.pausas || 0}</td><td>${s.metaCumprida ? '✅' : '—'}</td>`;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            function exportarCSV() {
+                if (estado.historico.length === 0) { showToast('Nenhum dado para exportar.', 'error'); return; }
+                let csv = 'Data,Disciplina,Modo,Tempo (segundos),Pausas,Meta Cumprida,Modelo\n';
+                estado.historico.forEach(s => { csv += `${s.data},"${s.disciplina}",${s.modo},${s.segundos},${s.pausas || 0},${s.metaCumprida ? 'Sim' : 'Não'},${s.modelo || 'padrao'}\n`; });
+                const blob = new Blob([csv], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a');
+                a.href = url; a.download = 'vulps_historico_' + new Date().toISOString().split('T')[0] + '.csv'; a.click(); URL.revokeObjectURL(url);
+                showToast('CSV exportado!', 'success');
+            }
+
+            function exportarPDF() { window.print(); showToast('Use a opção "Salvar como PDF" do navegador.', 'success'); }
+
+            function compartilharWhatsApp() {
+                const numero = prompt('Digite o número do WhatsApp (com DDD, apenas números):'); if (!numero) return;
+                const numeroLimpo = numero.replace(/\D/g, ''); const hoje = new Date().toISOString().split('T')[0];
+                const sessoesHoje = estado.historico.filter(s => s.data === hoje);
+                const totalSegundosHoje = sessoesHoje.reduce((acc, s) => acc + s.segundos, 0);
+                const totalSegundosGeral = estado.historico.reduce((acc, s) => acc + s.segundos, 0);
+                let msg = `📚 *Relatório VULPS+*\n📅 Data: ${new Date().toLocaleDateString('pt-BR')}\n⏱️ Tempo hoje: ${formatarTempo(totalSegundosHoje)}\n📊 Tempo acumulado: ${formatarTempo(totalSegundosGeral)}\n`;
+                if (estado.metaMinutos > 0) { const minHoje = Math.floor(totalSegundosHoje / 60); msg += `🎯 Meta: ${minHoje >= estado.metaMinutos ? '✅ Cumprida' : '❌ Não cumprida'}\n`; }
+                if (estado.disciplinaSelecionada) msg += `📖 Disciplina atual: ${estado.disciplinaSelecionada}\n`;
+                msg += `🖼️ Modelo: ${estado.modeloCronometro}\n\n_Enviado pelo Cronômetro VULP+_`;
+                window.open(`https://wa.me/${numeroLimpo}?text=${encodeURIComponent(msg)}`, '_blank');
+            }
+
+            function importarHistorico(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const dados = JSON.parse(e.target.result); if (!Array.isArray(dados)) throw new Error('Formato inválido');
+                        const idsExistentes = new Set(estado.historico.map(h => h.id)); let importados = 0;
+                        dados.forEach(item => { if (item.id && item.data && item.disciplina && item.segundos && !idsExistentes.has(item.id)) { estado.historico.push(item); idsExistentes.add(item.id); importados++; } });
+                        estado.historico.sort((a, b) => new Date(b.data) - new Date(a.data));
+                        salvarDados(); renderizarHistorico(); atualizarKPIs();
+                        showToast(`${importados} registros importados!`, 'success');
+                    } catch (err) { showToast('Arquivo inválido.', 'error'); }
+                };
+                reader.readAsText(file);
+            }
+
+            function selecionarMeta(minutos) {
+                if (minutos === 'personalizado') {
+                    const input = document.getElementById('metaPersonalizada'); input.style.display = 'inline-block'; input.focus();
+                    input.addEventListener('change', function handler() { const val = parseInt(this.value); if (val > 0) { estado.metaMinutos = val; salvarDados(); atualizarMetaInfo(); atualizarKPIs(); } this.removeEventListener('change', handler); }, { once: true });
+                } else {
+                    estado.metaMinutos = minutos; document.getElementById('metaPersonalizada').style.display = 'none';
+                    salvarDados(); atualizarMetaInfo(); atualizarKPIs();
+                }
+                document.querySelectorAll('.meta-btn').forEach(b => b.classList.remove('active'));
+                const ativo = document.querySelector(`.meta-btn[data-minutos="${minutos}"]`); if (ativo) ativo.classList.add('active');
+            }
+
+            function selecionarModo(modo) {
+                estado.modo = modo;
+                document.getElementById('configRegressivo').style.display = modo === 'regressivo' ? 'block' : 'none';
+                document.getElementById('configPomodoro').style.display = modo === 'pomodoro' ? 'block' : 'none';
+                atualizarModoTag(); salvarDados();
+                document.querySelectorAll('.modo-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector(`.modo-btn[data-modo="${modo}"]`)?.classList.add('active');
+            }
+
+            function init() {
+                carregarDados(); atualizarSaudacao(); atualizarFrase(); renderizarDisciplinas(); atualizarDestaqueDisciplina();
+                renderizarHistorico(); atualizarKPIs(); atualizarMetaInfo(); atualizarModoTag(); atualizarModeloContainer(); renderizarPomodoroCiclos();
+                if (estado.metaMinutos > 0) {
+                    document.getElementById('metaInfo').style.display = 'block';
+                    document.getElementById('metaValorTexto').textContent = formatarMinutos(estado.metaMinutos);
+                    const btnMeta = document.querySelector(`.meta-btn[data-minutos="${estado.metaMinutos}"]`);
+                    if (btnMeta) btnMeta.classList.add('active'); else document.querySelector('.meta-btn[data-minutos="personalizado"]')?.classList.add('active');
+                }
+                if (estado.modo) {
+                    document.querySelectorAll('.modo-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelector(`.modo-btn[data-modo="${estado.modo}"]`)?.classList.add('active');
+                    document.getElementById('configRegressivo').style.display = estado.modo === 'regressivo' ? 'block' : 'none';
+                    document.getElementById('configPomodoro').style.display = estado.modo === 'pomodoro' ? 'block' : 'none';
+                }
+                document.querySelectorAll('.modelo-chip').forEach(chip => chip.classList.toggle('selecionado', chip.dataset.modelo === estado.modeloCronometro));
+
+                document.getElementById('btnIniciar').addEventListener('click', iniciarCronometro);
+                document.getElementById('btnPausar').addEventListener('click', pausarCronometro);
+                document.getElementById('btnParar').addEventListener('click', pararCronometro);
+                document.querySelectorAll('.meta-btn').forEach(b => b.addEventListener('click', () => selecionarMeta(b.dataset.minutos === 'personalizado' ? 'personalizado' : parseInt(b.dataset.minutos))));
+                document.querySelectorAll('.modo-btn').forEach(b => b.addEventListener('click', () => selecionarModo(b.dataset.modo)));
+                document.querySelectorAll('.modelo-chip').forEach(b => b.addEventListener('click', () => selecionarModelo(b.dataset.modelo)));
+                document.getElementById('addDisciplinaBtn').addEventListener('click', () => {
+                    const input = document.getElementById('novaDisciplinaInput'); const nome = input.value.trim();
+                    if (nome && !estado.disciplinas.includes(nome)) { estado.disciplinas.push(nome); salvarDados(); renderizarDisciplinas(); input.value = ''; showToast('Disciplina adicionada!', 'success'); }
+                });
+                document.getElementById('tempoRegressivo').addEventListener('change', (e) => { estado.tempoRegressivo = parseInt(e.target.value) || 60; salvarDados(); });
+                document.getElementById('pomodoroPreset').addEventListener('change', (e) => { estado.pomodoroPreset = e.target.value; salvarDados(); });
+                document.getElementById('btnExportarCSV').addEventListener('click', exportarCSV);
+                document.getElementById('btnExportarPDF').addEventListener('click', exportarPDF);
+                document.getElementById('btnWhatsApp').addEventListener('click', compartilharWhatsApp);
+                document.getElementById('btnImportarHistorico').addEventListener('click', () => document.getElementById('inputImportarHistorico').click());
+                document.getElementById('inputImportarHistorico').addEventListener('change', (e) => { if (e.target.files?.[0]) { importarHistorico(e.target.files[0]); e.target.value = ''; } });
+
+                const ffOverlay = document.getElementById('fullfocusOverlay');
+                ffOverlay.addEventListener('click', () => { if (estado.modeloCronometro === 'fullfocus') { estado.fullfocusAtivo = false; ffOverlay.style.display = 'none'; } });
+
+                const buscaInput = document.getElementById('disciplinaBuscaInput');
+                if (buscaInput) { if (estado.disciplinaFiltro) buscaInput.value = estado.disciplinaFiltro; buscaInput.addEventListener('input', () => { estado.disciplinaFiltro = buscaInput.value; salvarDados(); renderizarDisciplinas(); }); }
+                atualizarTodosDisplays();
+            }
+
+            // ========== TEMA (apenas Claro e Escuro) ==========
+            const htmlEl = document.documentElement;
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const themeLabel = document.getElementById('theme-label');
+            const themes = ['light', 'dark'];
+            const THEME_KEY = 'vulps_theme_v2';
+            const themeData = { light: { icon: 'fa-sun', label: 'Claro' }, dark: { icon: 'fa-moon', label: 'Escuro' } };
+
+            function getCurrentThemeIndex() { const stored = localStorage.getItem(THEME_KEY); const idx = themes.indexOf(stored); return idx !== -1 ? idx : 0; }
+            function setTheme(index) {
+                const theme = themes[index]; htmlEl.setAttribute('data-theme', theme);
+                const info = themeData[theme]; if (info) { themeIcon.className = `fas ${info.icon}`; themeLabel.textContent = info.label; }
+                localStorage.setItem(THEME_KEY, theme);
+            }
+            setTheme(getCurrentThemeIndex());
+            themeToggle.addEventListener('click', () => { let idx = getCurrentThemeIndex(); idx = idx === 0 ? 1 : 0; setTheme(idx); });
+
+            // ========== SIDEBAR ==========
+            function initSidebar() {
+                const sidebar = document.getElementById('sidebar'), hamburgerBtn = document.getElementById('hamburgerBtn'), closeSidebarBtn = document.getElementById('closeSidebarBtn'), sidebarOverlay = document.getElementById('sidebarOverlay');
+                function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+                function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+                hamburgerBtn?.addEventListener('click', openSidebar);
+                closeSidebarBtn?.addEventListener('click', closeSidebar);
+                sidebarOverlay?.addEventListener('click', closeSidebar);
+                document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar(); });
+                sidebar.addEventListener('click', (e) => { if ((e.target.closest('a') || e.target.closest('button.sidebar-btn')) && window.innerWidth < 768) setTimeout(closeSidebar, 150); });
+            }
+
+            // ========== MANIFESTO ==========
+            function initManifesto() {
+                if (document.getElementById('vulps-manifesto-overlay')) return;
+                const overlay = document.createElement('div'); overlay.id = 'vulps-manifesto-overlay'; overlay.setAttribute('role', 'dialog'); overlay.setAttribute('aria-modal', 'true'); overlay.setAttribute('aria-label', 'Manifesto VULP+');
+                const card = document.createElement('div'); card.className = 'vulps-manifesto-card';
+                const closeBtn = document.createElement('button'); closeBtn.className = 'vulps-manifesto-close'; closeBtn.setAttribute('aria-label', 'Fechar manifesto'); closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                closeBtn.addEventListener('click', closeManifesto);
+                const header = document.createElement('div'); header.className = 'vulps-manifesto-header';
+                const mascot = document.createElement('img'); mascot.src = 'https://i.ibb.co/LzCwL9bX/ChatGPT_Image.png'; mascot.alt = 'Mascote VULP+'; mascot.className = 'vulps-manifesto-mascot';
+                const title = document.createElement('h2'); title.className = 'vulps-manifesto-title'; title.textContent = 'Manifesto VULP+';
+                const subtitle = document.createElement('p'); subtitle.className = 'vulps-manifesto-subtitle'; subtitle.textContent = 'Quem Somos';
+                header.append(mascot, title, subtitle);
+                const body = document.createElement('div'); body.className = 'vulps-manifesto-body';
+                body.innerHTML = `<p>Somos uma <span class="vulps-manifesto-highlight">plataforma colaborativa de estudos</span>, construída por quem está na jornada dos concursos públicos. Acreditamos que <span class="vulps-manifesto-highlight">o conhecimento deve ser acessível</span>, independente da condição financeira. Por isso, todas as nossas ferramentas são <span class="vulps-manifesto-highlight">gratuitas e de código aberto</span>. Se você acredita nessa causa, junte-se a nós!</p><p class="vulps-manifesto-footer">Juntos, construímos pontes para o conhecimento.</p>`;
+                card.append(closeBtn, header, body); overlay.appendChild(card); document.body.appendChild(overlay);
+                const escHandler = (e) => { if (e.key === 'Escape') { closeManifesto(); document.removeEventListener('keydown', escHandler); } };
+                document.addEventListener('keydown', escHandler);
+                overlay.addEventListener('click', (e) => { if (e.target === overlay) closeManifesto(); });
+            }
+            function openManifesto() { const overlay = document.getElementById('vulps-manifesto-overlay'); if (overlay) { overlay.classList.add('vulps-manifesto-open'); document.body.style.overflow = 'hidden'; } }
+            function closeManifesto() { const overlay = document.getElementById('vulps-manifesto-overlay'); if (overlay) { overlay.classList.remove('vulps-manifesto-open'); document.body.style.overflow = ''; } }
+
+            // ========== CHATBOT CAMI ==========
+            function initChatbot() {
+                const camiFAB = document.getElementById('camiFAB'), camiChatWindow = document.getElementById('camiChatWindow'), camiChatMessages = document.getElementById('camiChatMessages');
+                const camiChatInput = document.getElementById('camiChatInput'), camiSendBtn = document.getElementById('camiSendBtn'), camiMinimizeBtn = document.getElementById('camiChatMinimize');
+                const camiDot = document.getElementById('camiDot'), camiQuickReplies = document.getElementById('camiQuickReplies');
+                let camiOpen = false, camiFirstInteraction = true, camiAutoOpenTimer = null;
+                const CAMI_KNOWLEDGE = {
+                    como_usar: { resposta: 'Para usar o <strong>Cronômetro VULPS+</strong>:<br><br>📖 <strong>Selecione uma disciplina</strong> na lista.<br>🎯 <strong>Defina uma meta</strong> de estudo.<br>⏱️ <strong>Escolha o modo</strong> (Padrão, Regressivo, Pomodoro, Livre ou Foco).<br>🖼️ <strong>Personalize o visual</strong> com 10 modelos diferentes.<br><br>Seus dados ficam salvos automaticamente!', topico: 'Como usar' },
+                    modos: { resposta: '<strong>Modos disponíveis:</strong><br><br>▶️ <strong>Padrão</strong> — cronômetro progressivo livre.<br>⏳ <strong>Regressivo</strong> — define um tempo e ele faz contagem regressiva.<br>🍅 <strong>Pomodoro</strong> — ciclos de foco e pausa (25/5, 50/10, 90/15).<br>♾️ <strong>Livre</strong> — sem restrições, apenas acumula tempo.<br>👁️ <strong>Foco</strong> — ideal para sessões intensas.', topico: 'Modos' },
+                    modelos: { resposta: 'Você pode escolher entre <strong>10 modelos visuais</strong> incríveis:<br><br>🕐 <strong>Padrão</strong> • ⭕ <strong>Circular</strong> • 🪧 <strong>Flip Clock</strong><br>◽ <strong>Minimalista</strong> • 🍅 <strong>Pomodoro Visual</strong><br>📊 <strong>Dashboard</strong> • 🔲 <strong>Full Focus</strong> (tela cheia)<br>⌚ <strong>Smartwatch</strong> • 🧱 <strong>Study Blocks</strong> • 💡 <strong>Neon</strong><br><br>Cada um transforma a experiência de estudo!', topico: 'Modelos' },
+                    disciplinas: { resposta: 'Gerencie suas <strong>disciplinas</strong>:<br><br>📚 Selecione na tabela ou busque pelo nome.<br>➕ Adicione novas disciplinas personalizadas.<br>📊 Acompanhe qual é sua disciplina mais estudada nos KPIs.', topico: 'Disciplinas' },
+                    relatorios: { resposta: 'Os <strong>relatórios</strong> mostram seu histórico completo:<br><br>📅 Data, disciplina, modo e tempo de cada sessão.<br>📥 Exporte para <strong>CSV</strong> ou <strong>PDF</strong>.<br>📱 Compartilhe no <strong>WhatsApp</strong>.<br>📤 Importe dados de backup.', topico: 'Relatórios' }
+                };
+
+                function camiToggleChat() {
+                    camiOpen = !camiOpen;
+                    if (camiOpen) {
+                        camiChatWindow.classList.add('active'); camiFAB.classList.add('chat-open'); camiDot.style.display = 'none'; camiChatInput.focus();
+                        if (camiFirstInteraction) {
+                            camiFirstInteraction = false;
+                            camiMostrarDigitando(() => camiEnviarMensagemBot('Olá! 👋 Eu sou <strong>Cami</strong>, seu camaleão estratégico da VULPS+. Estou aqui para ajudar você a aproveitar ao máximo o <strong>Cronômetro de Estudos</strong>! 🦎<br><br>Pergunte sobre modos, modelos visuais, disciplinas ou como exportar seus relatórios!'));
+                        }
+                    } else { camiChatWindow.classList.remove('active'); camiFAB.classList.remove('chat-open'); }
+                }
+
+                function camiMostrarDigitando(callback) {
+                    const msgDiv = document.createElement('div'); msgDiv.className = 'cami-message bot'; msgDiv.innerHTML = '<div class="cami-typing"><span></span><span></span><span></span></div>';
+                    camiChatMessages.appendChild(msgDiv); camiChatMessages.scrollTop = camiChatMessages.scrollHeight;
+                    setTimeout(() => { msgDiv.remove(); callback(); }, 1200 + Math.random() * 800);
+                }
+
+                function camiEnviarMensagemBot(texto) {
+                    const msgDiv = document.createElement('div'); msgDiv.className = 'cami-message bot'; msgDiv.innerHTML = texto;
+                    camiChatMessages.appendChild(msgDiv); camiChatMessages.scrollTop = camiChatMessages.scrollHeight;
+                }
+
+                function camiEnviarMensagemUsuario(texto) {
+                    const msgDiv = document.createElement('div'); msgDiv.className = 'cami-message user'; msgDiv.textContent = texto;
+                    camiChatMessages.appendChild(msgDiv); camiChatMessages.scrollTop = camiChatMessages.scrollHeight;
+                }
+
+                function camiProcessarMensagem(texto) {
+                    const t = texto.toLowerCase().trim(); camiEnviarMensagemUsuario(texto);
+                    camiMostrarDigitando(() => {
+                        let respondida = false;
+                        for (const [key, data] of Object.entries(CAMI_KNOWLEDGE)) { if (t.includes(key.replace(/_/g, ' ')) || t.includes(data.topico.toLowerCase())) { camiEnviarMensagemBot(data.resposta); respondida = true; break; } }
+                        if (!respondida) camiEnviarMensagemBot('Posso ajudar com várias coisas! Escolha um dos botões abaixo ou pergunte sobre modos de estudo, modelos visuais, disciplinas ou relatórios!');
+                    });
+                }
+
+                camiFAB.addEventListener('click', camiToggleChat);
+                camiMinimizeBtn.addEventListener('click', () => { camiOpen = true; camiToggleChat(); });
+                camiSendBtn.addEventListener('click', () => { const texto = camiChatInput.value.trim(); if (texto) { camiProcessarMensagem(texto); camiChatInput.value = ''; } });
+                camiChatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); const texto = camiChatInput.value.trim(); if (texto) { camiProcessarMensagem(texto); camiChatInput.value = ''; } } });
+                camiQuickReplies.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.cami-quick-btn'); if (!btn || !btn.dataset.topic) return;
+                    if (!camiOpen) camiToggleChat();
+                    const conhecimento = CAMI_KNOWLEDGE[btn.dataset.topic];
+                    camiEnviarMensagemUsuario(conhecimento?.topico || btn.dataset.topic);
+                    camiMostrarDigitando(() => camiEnviarMensagemBot(conhecimento?.resposta || 'Como posso ajudar com isso?'));
+                });
+
+                function camiAgendarApresentacao() {
+                    if (camiAutoOpenTimer) clearTimeout(camiAutoOpenTimer);
+                    if (!camiFirstInteraction) return;
+                    camiAutoOpenTimer = setTimeout(() => { if (!camiOpen && camiFirstInteraction) camiDot.style.display = 'block'; }, 5000);
+                }
+                camiAgendarApresentacao();
+            }
+
+            document.getElementById('quemSomosBtn').addEventListener('click', openManifesto);
+            document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'f') { e.preventDefault(); document.getElementById('disciplinaBuscaInput')?.focus(); } });
+
+            initSidebar();
+            initManifesto();
+            initChatbot();
+            init();
+        })();
     </script>
 </body>
 </html>
